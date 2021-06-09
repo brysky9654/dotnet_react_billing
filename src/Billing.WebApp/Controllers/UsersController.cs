@@ -3,11 +3,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Billing.WebApp.Data;
 using Billing.WebApp.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Billing.WebApp.Controllers
 {
+    [Authorize]
     public class UsersController : BaseApiController
     {
         private readonly DataContext _context;
