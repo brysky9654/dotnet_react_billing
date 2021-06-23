@@ -231,6 +231,21 @@ _Pvt_Extensions
 # FAKE - F# Make
 .fake/
 
+# Appsettings
+**/appsettings.development.json
+**/appsettings.staging.json
+**/appsettings.production.json
+
+# Connectionstrings
+**/connectionstrings.development.json
+**/connectionstrings.staging.json
+**/connectionstrings.production.json
+
+# Mailsettings
+**/mailsettings.development.json
+**/mailsettings.staging.json
+**/mailsettings.production.json
+
 # Database
 *.sqlite3
 *.db
