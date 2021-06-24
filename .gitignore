@@ -249,3 +249,6 @@ _Pvt_Extensions
 # Database
 *.sqlite3
 *.db
+
+# VS Code
+.vscode/

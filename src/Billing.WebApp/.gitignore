@@ -249,3 +249,6 @@ mailsettings.production.json
 # Database
 *.sqlite3
 *.db
+
+# VS Code
+.vscode/
