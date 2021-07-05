@@ -1,14 +1,9 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System;
 using Billing.WebApp.DTOs;
 using Billing.WebApp.Entities;
-using Billing.WebApp.Data;
-using Billing.WebApp.Services;
 using Billing.WebApp.Interfaces;
 
 namespace Billing.WebApp.Controllers
@@ -16,36 +11,29 @@ namespace Billing.WebApp.Controllers
     public class AccountController : BaseApiController
     {
         private readonly ITokenService _tokenService;
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
-        // private readonly MailService _mailService;
-        private readonly DataContext _context;
+        private readonly IAccountRepository _accountRepository;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ITokenService tokenService, DataContext context)
+        public AccountController(ITokenService tokenService, IAccountRepository accountRepository)
         {
-            _signInManager = signInManager;
-            _userManager = userManager;
             _tokenService = tokenService;
-            _context = context;
+            _accountRepository = accountRepository;
         }
 
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> RegisterAsync(RegisterDto registerDto)
         {
-            if (await UserExistsAsync(registerDto.Username)) return BadRequest("An account already exists with this email address");
-
             var user = new User
             {
                 UserName = registerDto.Username.ToLower(),
                 Email = registerDto.Username.ToLower()
             };
 
-            var result = await _userManager.CreateAsync(user, registerDto.Password);
+            if (await _accountRepository.GetUserAsync(registerDto.Username) != null) return BadRequest("An account already exists with this email address");
 
+            var result = await _accountRepository.RegisterAsync(user, registerDto.Password);
             if (!result.Succeeded) return BadRequest(result.Errors);
 
-            var roleResult = await _userManager.AddToRoleAsync(user, "Viewer");
-
+            var roleResult = await _accountRepository.AddToRoleAsync(user);
             if (!roleResult.Succeeded) return BadRequest(result.Errors);
 
             return new UserDto
@@ -58,14 +46,10 @@ namespace Billing.WebApp.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> LoginAsync(LoginDto loginDto)
         {
-            var user = await _userManager.Users
-                .SingleOrDefaultAsync(u => u.Email == loginDto.Username.ToLower());
-
+            var user = await _accountRepository.GetUserAsync(loginDto.Username);
             if (user == null) return Unauthorized("Invalid username");
 
-            var result = await _signInManager
-                .CheckPasswordSignInAsync(user, loginDto.Password, false);
-
+            var result = await _accountRepository.LoginAsync(user, loginDto.Password);
             if (!result.Succeeded) return Unauthorized();
 
             return new UserDto
@@ -73,11 +57,6 @@ namespace Billing.WebApp.Controllers
                 Username = user.UserName,
                 Token = await _tokenService.CreateToken(user)
             };
-        }
-
-        private async Task<bool> UserExistsAsync(string email)
-        {
-            return await _userManager.Users.AnyAsync(u => u.Email == email.ToLower());
         }
     }
 }
