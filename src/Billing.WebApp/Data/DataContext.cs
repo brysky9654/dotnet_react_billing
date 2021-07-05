@@ -11,6 +11,9 @@ namespace Billing.WebApp.Data
         {
         }
         public DbSet<User> User { get; set; }
+        public DbSet<Contact> Contact { get; set; }
+        public DbSet<Invoice> Invoice { get; set; }
+        public DbSet<InvoiceStatus> InvoiceStatus { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

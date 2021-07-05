@@ -3,20 +3,22 @@ using System;
 using Billing.WebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Billing.WebApp.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210705083112_AddCustomersTable")]
+    partial class AddCustomersTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.7");
 
-            modelBuilder.Entity("Billing.WebApp.Entities.Contact", b =>
+            modelBuilder.Entity("Billing.WebApp.Entities.Customer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -45,54 +47,7 @@ namespace Billing.WebApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Contact");
-                });
-
-            modelBuilder.Entity("Billing.WebApp.Entities.Invoice", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("ContactId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("Due")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("InvoiceStatusId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("Paid")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContactId");
-
-                    b.HasIndex("InvoiceStatusId");
-
-                    b.ToTable("Invoice");
-                });
-
-            modelBuilder.Entity("Billing.WebApp.Entities.InvoiceStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("InvoiceStatus");
+                    b.ToTable("Customer");
                 });
 
             modelBuilder.Entity("Billing.WebApp.Entities.Role", b =>
@@ -290,21 +245,6 @@ namespace Billing.WebApp.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("Billing.WebApp.Entities.Invoice", b =>
-                {
-                    b.HasOne("Billing.WebApp.Entities.Contact", "Contact")
-                        .WithMany()
-                        .HasForeignKey("ContactId");
-
-                    b.HasOne("Billing.WebApp.Entities.InvoiceStatus", "InvoiceStatus")
-                        .WithMany()
-                        .HasForeignKey("InvoiceStatusId");
-
-                    b.Navigation("Contact");
-
-                    b.Navigation("InvoiceStatus");
                 });
 
             modelBuilder.Entity("Billing.WebApp.Entities.UserRole", b =>
