@@ -14,6 +14,8 @@ namespace Billing.WebApp.Data
         public DbSet<Contact> Contact { get; set; }
         public DbSet<Invoice> Invoice { get; set; }
         public DbSet<InvoiceStatus> InvoiceStatus { get; set; }
+        public DbSet<InvoiceItem> InvoiceItem { get; set; }
+        public DbSet<InvoiceTax> InvoiceTax { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
