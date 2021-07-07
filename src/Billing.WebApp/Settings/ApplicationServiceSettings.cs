@@ -12,8 +12,7 @@ namespace Billing.WebApp.Settings
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
         {
             services.AddScoped<ITokenService, TokenService>();
-            services.AddScoped<IUserRepository, UserRepository>(); // REMOVE
-            services.AddScoped<IAccountRepository, AccountRepository>(); // REMOVE
+            services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddDbContext<DataContext>(options =>
             {

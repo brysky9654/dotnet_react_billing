@@ -33,10 +33,8 @@ namespace Billing.WebApp.Data
             return await _signInManager.CheckPasswordSignInAsync(user, password, false);
         }
 
-
         public async Task<User> GetUserAsync(string email)
         {
-            //return await _userManager.Users.AnyAsync(u => u.Email == email.ToLower());
             return await _userManager.Users.SingleOrDefaultAsync(u => u.Email == email.ToLower());
         }
     }

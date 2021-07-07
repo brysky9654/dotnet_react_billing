@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Billing.WebApp.Controllers
 {
-    // [Authorize]
+    [Authorize]
     public class ContactController : BaseApiController
     {
         private readonly IUnitOfWork _unitOfWork;
