@@ -1,16 +1,14 @@
 using System;
 
-namespace Billing.WebApp.Entities
+namespace Billing.WebApp.DTOs
 {
-    public class Invoice
+    public class InvoiceDto
     {
-        public int Id { get; set; }
-        public Contact Contact { get; set; }
-        public InvoiceStatus InvoiceStatus { get; set; }
+        public int ContactId { get; set; }
+        public int InvoiceStatusId { get; set; }
         public string Notes { get; set; }
         public string Reference { get; set; }
         public DateTime Created { get; set; } = DateTime.Now;
         public DateTime Due { get; set; } = DateTime.Today.AddDays(7);
-        public DateTime Paid { get; set; }
     }
 }

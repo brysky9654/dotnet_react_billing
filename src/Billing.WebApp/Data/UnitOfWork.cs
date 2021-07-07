@@ -12,8 +12,8 @@ namespace Billing.WebApp.Data
         }
 
         public IUserRepository UserRepository => new UserRepository(_context);
-
         public IContactRepository ContactRepository => new ContactRepository(_context);
+        public IInvoiceRepository InvoiceRepository => new InvoiceRepository(_context);
 
         public async Task<bool> Complete()
         {
