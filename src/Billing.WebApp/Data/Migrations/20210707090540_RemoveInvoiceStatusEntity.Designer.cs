@@ -3,14 +3,16 @@ using System;
 using Billing.WebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Billing.WebApp.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210707090540_RemoveInvoiceStatusEntity")]
+    partial class RemoveInvoiceStatusEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,6 +65,9 @@ namespace Billing.WebApp.Data.Migrations
                     b.Property<DateTime>("Due")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("InvoiceStatus")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Notes")
                         .HasColumnType("TEXT");
 
@@ -70,9 +75,6 @@ namespace Billing.WebApp.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Reference")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Status")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

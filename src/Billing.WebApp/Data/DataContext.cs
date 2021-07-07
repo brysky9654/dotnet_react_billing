@@ -13,7 +13,6 @@ namespace Billing.WebApp.Data
         public DbSet<User> User { get; set; }
         public DbSet<Contact> Contact { get; set; }
         public DbSet<Invoice> Invoice { get; set; }
-        public DbSet<InvoiceStatus> InvoiceStatus { get; set; }
         public DbSet<InvoiceItem> InvoiceItem { get; set; }
         public DbSet<InvoiceTax> InvoiceTax { get; set; }
 

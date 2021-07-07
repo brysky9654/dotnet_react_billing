@@ -33,8 +33,12 @@ namespace Billing.WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult<Invoice>> CreateInvoiceAsync(InvoiceDto invoiceDto)
         {
+            var contact = await _unitOfWork.ContactRepository.GetContactAsync(invoiceDto.ContactId);
+
             var invoice = new Invoice
             {
+                Contact = contact,
+                Status = invoiceDto.Status,
                 Notes = invoiceDto.Notes,
                 Reference = invoiceDto.Reference
             };
@@ -52,8 +56,11 @@ namespace Billing.WebApp.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateInvoiceAsync(int id, InvoiceDto invoiceDto)
         {
+            var contact = await _unitOfWork.ContactRepository.GetContactAsync(invoiceDto.ContactId);
             var invoice = await _unitOfWork.InvoiceRepository.GetInvoiceAsync(id);
 
+            invoice.Contact = contact;
+            invoice.Status = invoiceDto.Status;
             invoice.Notes = invoiceDto.Notes;
             invoice.Reference = invoiceDto.Reference;
 
