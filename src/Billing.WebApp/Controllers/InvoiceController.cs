@@ -117,9 +117,6 @@ namespace Billing.WebApp.Controllers
             var invoice = await _unitOfWork.InvoiceRepository.GetInvoiceAsync(id);
             if (invoice == null) return Unauthorized("Invoice not found");
 
-            var invoiceItems = await _unitOfWork.InvoiceItemRepository.GetInvoiceItemsByInvoiceAsync(invoice);
-            _unitOfWork.InvoiceItemRepository.DeleteInvoiceItemsAsync(invoiceItems);
-
             _unitOfWork.InvoiceRepository.DeleteInvoiceAsync(invoice);
 
             if (await _unitOfWork.Complete())

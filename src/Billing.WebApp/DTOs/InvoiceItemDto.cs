@@ -6,7 +6,7 @@ namespace Billing.WebApp.DTOs
         public int Quantity { get; set; }
         public float Price { get; set; }
         public string Description { get; set; }
-        public int TaxAmount { get; set; }
+        public float TaxAmount { get; set; }
         public bool TaxPercentage { get; set; } = true;
         public bool TaxInclusive { get; set; } = true;
     }
