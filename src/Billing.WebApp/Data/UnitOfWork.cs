@@ -15,6 +15,7 @@ namespace Billing.WebApp.Data
         public IContactRepository ContactRepository => new ContactRepository(_context);
         public IInvoiceRepository InvoiceRepository => new InvoiceRepository(_context);
         public IInvoiceItemRepository InvoiceItemRepository => new InvoiceItemRepository(_context);
+        public IInvoiceTaxRepository InvoiceTaxRepository => new InvoiceTaxRepository(_context);
 
         public async Task<bool> Complete()
         {
