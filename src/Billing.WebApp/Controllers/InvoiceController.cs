@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Billing.WebApp.DTOs;
 using Billing.WebApp.Entities;
@@ -12,6 +13,7 @@ namespace Billing.WebApp.Controllers
     public class InvoiceController : BaseApiController
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly string[] _status = { "DRAFT", "PUBLISHED", "REVERSED", "DELETED" };
 
         public InvoiceController(IUnitOfWork unitOfWork)
         {
@@ -33,7 +35,11 @@ namespace Billing.WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult<Invoice>> CreateInvoiceAsync(InvoiceDto invoiceDto)
         {
+            if (_status.Contains(invoiceDto.Status) == false) return Unauthorized("Incorrect invoice type");
+
             var contact = await _unitOfWork.ContactRepository.GetContactAsync(invoiceDto.ContactId);
+
+            if (contact == null) return Unauthorized("Contact not found");
 
             var invoice = new Invoice
             {
@@ -45,9 +51,34 @@ namespace Billing.WebApp.Controllers
 
             _unitOfWork.InvoiceRepository.CreateInvoiceAsync(invoice);
 
+            _unitOfWork.InvoiceItemRepository.CreateInvoiceItemsAsync(invoice, invoiceDto.InvoiceItems);
+
             if (await _unitOfWork.Complete())
             {
-                return CreatedAtRoute("GetInvoice", new { id = invoice.Id }, invoice);
+                var result = new Invoice
+                {
+                    Id = invoice.Id,
+                    Contact = invoice.Contact,
+                    Status = invoice.Status,
+                    Notes = invoice.Notes,
+                    Reference = invoice.Reference,
+                    Created = invoice.Created,
+                    Due = invoice.Due,
+                    Paid = invoice.Paid,
+                    InvoiceItems = invoice.InvoiceItems.Select(x => new InvoiceItem
+                    {
+                        Id = x.Id,
+                        Order = x.Order,
+                        Quantity = x.Quantity,
+                        Price = x.Price,
+                        Description = x.Description,
+                        TaxAmount = x.TaxAmount,
+                        TaxPercentage = x.TaxPercentage,
+                        TaxInclusive = x.TaxInclusive
+                    }).ToList()
+                };
+
+                return CreatedAtRoute("GetInvoice", new { id = invoice.Id }, result);
             }
 
             return BadRequest("Unable to create invoice");
@@ -57,7 +88,9 @@ namespace Billing.WebApp.Controllers
         public async Task<ActionResult> UpdateInvoiceAsync(int id, InvoiceDto invoiceDto)
         {
             var contact = await _unitOfWork.ContactRepository.GetContactAsync(invoiceDto.ContactId);
+            if (contact == null) return Unauthorized("Contact not found");
             var invoice = await _unitOfWork.InvoiceRepository.GetInvoiceAsync(id);
+            if (invoice == null) return Unauthorized("Invoice not found");
 
             invoice.Contact = contact;
             invoice.Status = invoiceDto.Status;
@@ -65,6 +98,10 @@ namespace Billing.WebApp.Controllers
             invoice.Reference = invoiceDto.Reference;
 
             _unitOfWork.InvoiceRepository.UpdateInvoiceAsync(invoice);
+
+            var invoiceItems = await _unitOfWork.InvoiceItemRepository.GetInvoiceItemsByInvoiceAsync(invoice);
+            _unitOfWork.InvoiceItemRepository.DeleteInvoiceItemsAsync(invoiceItems);
+            _unitOfWork.InvoiceItemRepository.CreateInvoiceItemsAsync(invoice, invoiceDto.InvoiceItems);
 
             if (await _unitOfWork.Complete())
             {
@@ -78,6 +115,10 @@ namespace Billing.WebApp.Controllers
         public async Task<ActionResult> DeleteInvoiceAsync(int id)
         {
             var invoice = await _unitOfWork.InvoiceRepository.GetInvoiceAsync(id);
+            if (invoice == null) return Unauthorized("Invoice not found");
+
+            var invoiceItems = await _unitOfWork.InvoiceItemRepository.GetInvoiceItemsByInvoiceAsync(invoice);
+            _unitOfWork.InvoiceItemRepository.DeleteInvoiceItemsAsync(invoiceItems);
 
             _unitOfWork.InvoiceRepository.DeleteInvoiceAsync(invoice);
 

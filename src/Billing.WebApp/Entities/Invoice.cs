@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Billing.WebApp.Entities
 {
@@ -12,5 +13,6 @@ namespace Billing.WebApp.Entities
         public DateTime Created { get; set; } = DateTime.Now;
         public DateTime Due { get; set; } = DateTime.Today.AddDays(7);
         public DateTime Paid { get; set; }
+        public ICollection<InvoiceItem> InvoiceItems { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Billing.WebApp.DTOs;
 using Billing.WebApp.Entities;
 using Billing.WebApp.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -17,11 +18,56 @@ namespace Billing.WebApp.Data
 
         public async Task<IEnumerable<Invoice>> GetInvoicesAsync()
         {
-            return await _context.Invoice.ToListAsync();
+            return await _context.Invoice
+                .Select(i => new Invoice
+                {
+                    Id = i.Id,
+                    Contact = i.Contact,
+                    Status = i.Status,
+                    Notes = i.Notes,
+                    Reference = i.Reference,
+                    Created = i.Created,
+                    Due = i.Due,
+                    Paid = i.Paid,
+                    InvoiceItems = i.InvoiceItems.Select(x => new InvoiceItem
+                    {
+                        Id = x.Id,
+                        Order = x.Order,
+                        Quantity = x.Quantity,
+                        Price = x.Price,
+                        Description = x.Description,
+                        TaxAmount = x.TaxAmount,
+                        TaxPercentage = x.TaxPercentage,
+                        TaxInclusive = x.TaxInclusive
+                    }).ToList()
+                })
+                .ToListAsync();
         }
         public async Task<Invoice> GetInvoiceAsync(int id)
         {
             return await _context.Invoice
+                .Select(i => new Invoice
+                {
+                    Id = i.Id,
+                    Contact = i.Contact,
+                    Status = i.Status,
+                    Notes = i.Notes,
+                    Reference = i.Reference,
+                    Created = i.Created,
+                    Due = i.Due,
+                    Paid = i.Paid,
+                    InvoiceItems = i.InvoiceItems.Select(x => new InvoiceItem
+                    {
+                        Id = x.Id,
+                        Order = x.Order,
+                        Quantity = x.Quantity,
+                        Price = x.Price,
+                        Description = x.Description,
+                        TaxAmount = x.TaxAmount,
+                        TaxPercentage = x.TaxPercentage,
+                        TaxInclusive = x.TaxInclusive
+                    }).ToList()
+                })
                 .Where(x => x.Id == id)
                 .SingleOrDefaultAsync();
         }

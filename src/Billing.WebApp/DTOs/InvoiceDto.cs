@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Billing.WebApp.DTOs
 {
@@ -10,5 +11,6 @@ namespace Billing.WebApp.DTOs
         public string Reference { get; set; }
         public DateTime Created { get; set; } = DateTime.Now;
         public DateTime Due { get; set; } = DateTime.Today.AddDays(7);
+        public ICollection<InvoiceItemDto> InvoiceItems { get; set; }
     }
 }

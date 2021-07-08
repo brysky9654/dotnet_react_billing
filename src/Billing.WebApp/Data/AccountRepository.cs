@@ -12,7 +12,6 @@ namespace Billing.WebApp.Data
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly DataContext _context;
         public AccountRepository(UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _signInManager = signInManager;

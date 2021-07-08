@@ -32,6 +32,11 @@ namespace Billing.WebApp.Data
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasForeignKey(ur => ur.RoleId)
                 .IsRequired();
+
+            builder.Entity<Invoice>()
+                .HasMany(i => i.InvoiceItems)
+                .WithOne(ii => ii.Invoice)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

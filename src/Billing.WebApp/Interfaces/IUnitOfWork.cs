@@ -7,6 +7,7 @@ namespace Billing.WebApp.Interfaces
         IUserRepository UserRepository { get; }
         IContactRepository ContactRepository { get; }
         IInvoiceRepository InvoiceRepository { get; }
+        IInvoiceItemRepository InvoiceItemRepository { get; }
         Task<bool> Complete();
         bool HasChanges();
     }
