@@ -78,14 +78,112 @@ namespace Billing.WebApp.Data
 
             var contact = new Contact
             {
-                Name = "John Smith",
+                FirstName = "John",
+                LastName = "Smith",
+                BusinessName = "ABC Corp",
                 Email = "john.smith@example.com",
-                Address = "123 Test Street, Sydney",
-                State = "NSW",
-                Country = "AU"
+                Address = "123 Test Street",
+                City = "Sydney",
+                State = "New South Wales",
+                Country = "Australia",
+                Favourited = false
             };
 
             _context.Contact.Add(contact);
+
+            var contacts = new List<Contact>
+            {
+                new Contact {
+                    FirstName = "John",
+                    LastName = "Smith",
+                    BusinessName = "ABC Corp",
+                    Email = "john@example.com",
+                    Address = "13 Test Street",
+                    City = "Sydney",
+                    State = "New South Wales",
+                    Country = "Australia",
+                    Favourited = false
+                },
+                new Contact {
+                    FirstName = "Sam",
+                    LastName = "Smith",
+                    BusinessName = "Big Inc",
+                    Email = "sandy@example.com",
+                    Address = "23 York Street",
+                    City = "Sydney",
+                    State = "New South Wales",
+                    Country = "Australia",
+                    Favourited = false
+                },
+                new Contact {
+                    FirstName = "Sally",
+                    LastName = "Jones",
+                    BusinessName = "ABC Corp",
+                    Email = "sal@example.com",
+                    Address = "21 Queen Street",
+                    City = "Brisbane",
+                    State = "Queensland",
+                    Country = "Australia",
+                    Favourited = false
+                },
+                new Contact {
+                    FirstName = "Sandra",
+                    LastName = "Hope",
+                    BusinessName = "ABC Corp",
+                    Email = "sandra@example.com",
+                    Address = "34 Olive Road",
+                    City = "Brisbane",
+                    State = "Queensland",
+                    Country = "Australia",
+                    Favourited = true
+                },
+                new Contact {
+                    FirstName = "Kim",
+                    LastName = "Johnson",
+                    BusinessName = "XYZ Co",
+                    Email = "kim@example.com",
+                    Address = "123 Test Street",
+                    City = "Sydney",
+                    State = "New South Wales",
+                    Country = "Australia",
+                    Favourited = false
+                },
+                new Contact {
+                    FirstName = "Alex",
+                    LastName = "Andrews",
+                    BusinessName = "Big Inc",
+                    Email = "alex@example.com",
+                    Address = "65 Edward Street",
+                    City = "Melbourne",
+                    State = "Victoria",
+                    Country = "Australia",
+                    Favourited = true
+                },
+                new Contact {
+                    FirstName = "Sasha",
+                    LastName = "Ryan",
+                    BusinessName = "XYZ Co",
+                    Email = "sasha@example.com",
+                    Address = "40 Ann Street",
+                    City = "Brisbane",
+                    State = "Queensland",
+                    Country = "Australia",
+                    Favourited = true
+                },
+                new Contact {
+                    FirstName = "Charlie",
+                    LastName = "Stevens",
+                    BusinessName = "ABC Corp",
+                    Email = "charlie@example.com",
+                    Address = "32 Creek Street",
+                    City = "Brisbane",
+                    State = "Queensland",
+                    Country = "Australia",
+                    Favourited = false
+                }
+            };
+
+            contacts.ForEach(c => _context.Contact.Add(c));
 
             var invoiceItems = new List<InvoiceItem>
             {

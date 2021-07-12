@@ -35,11 +35,15 @@ namespace Billing.WebApp.Controllers
         {
             var contact = new Contact
             {
-                Name = contactDto.Name,
+                FirstName = contactDto.FirstName,
+                LastName = contactDto.LastName,
+                BusinessName = contactDto.BusinessName,
                 Email = contactDto.Email,
                 Address = contactDto.Address,
                 State = contactDto.State,
-                Country = contactDto.Country
+                City = contactDto.City,
+                Country = contactDto.Country,
+                Favourited = contactDto.Favourited
             };
 
             _unitOfWork.ContactRepository.CreateContactAsync(contact);
@@ -57,11 +61,15 @@ namespace Billing.WebApp.Controllers
         {
             var contact = await _unitOfWork.ContactRepository.GetContactAsync(id);
 
-            contact.Name = contactDto.Name;
+            contact.FirstName = contactDto.FirstName;
+            contact.LastName = contactDto.LastName;
+            contact.BusinessName = contactDto.BusinessName;
             contact.Email = contactDto.Email;
             contact.Address = contactDto.Address;
             contact.State = contactDto.State;
+            contact.City = contactDto.City;
             contact.Country = contactDto.Country;
+            contact.Favourited = contactDto.Favourited;
 
             _unitOfWork.ContactRepository.UpdateContactAsync(contact);
 
