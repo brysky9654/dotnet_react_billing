@@ -1,10 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import Joi from 'joi-browser';
 import Form from './Forms/Form';
 import Input from './Forms/Input';
 
-const ContactsForm = ({ history }) => {
+const ContactsForm = ({ history, match }) => {
+
+    useEffect(() => {
+        const contactId = match.params.id;
+        console.log(contactId);
+        if (contactId === 'new') return;
+
+        // get the data from the server here
+        const contact = null; // replace
+        if (!contact) return history.replace('/not-found');
+        // map contact data gere
+      }, []);
+
     const [data, setdata] = useState({
         firstName: "",
         lastName: "",
@@ -133,7 +145,6 @@ const ContactsForm = ({ history }) => {
                     <CountryDropdown
                         className="form-control form-select"
                         id="country"
-                        valueType="short"
                         priorityOptions={["AU"]}
                         value={data.country}
                         onChange={(country) => selectCountry(country)}
@@ -144,7 +155,6 @@ const ContactsForm = ({ history }) => {
                     <RegionDropdown
                         className="form-control form-select"
                         id="region"
-                        countryValueType="short"
                         country={data.country}
                         value={data.region}
                         onChange={(region) => selectRegion(region)}

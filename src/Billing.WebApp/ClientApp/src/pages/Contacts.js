@@ -3,14 +3,17 @@ import { Link } from 'react-router-dom';
 import ContactsTable from '../components/ContactsTable';
 import Pagination from '../components/Tables/Pagination';
 import ListGroup from '../components/Tables/ListGroup';
-import { paginate } from '../Utils/paginate';
-import { tagsData, contactsData } from '../Test/testData';
+import SearchBox from '../components/Tables/SearchBox';
+import { paginate } from '../utils/paginate';
+import PlusIcon from '../assets/icons/plus.svg';
+import { tagsData, contactsData } from '../test/testData';
+
 
 const Contacts = () => {
     const [pageSize, setPageSize] = useState(2);
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedTag, setSelectedTag] = useState(null);
-    const [sortColumn, setSortColumn] = useState({ path: 'name', order: 'asc'});
+    const [sortColumn, setSortColumn] = useState({ path: 'firstName', order: 'asc'});
     const [searchQuery, setSearchQuery] = useState("");
 
     const [tags, setTags] = useState([{ id: '', name: "All Tags" }, ...tagsData]);
@@ -37,6 +40,7 @@ const Contacts = () => {
 
     const handleTagSelect = tag => {
         setCurrentPage(1);
+        setSearchQuery("");
         setSelectedTag(tag);
     }
 
@@ -51,9 +55,21 @@ const Contacts = () => {
     }
 
     const getPagedData = () => {
-        const filtered = selectedTag && selectedTag.id 
-            ? contacts.filter(t => t.state === selectedTag.name) 
-            : contacts;
+
+        let filtered = contacts;
+
+        if (searchQuery) {
+            filtered = contacts.filter(item => {
+                const query = searchQuery.toLowerCase();
+                return (
+                  item.firstName.toLowerCase().indexOf(query) >= 0 ||
+                  item.lastName.toLowerCase().indexOf(query) >= 0 || 
+                  item.businessName.toLowerCase().indexOf(query) >= 0
+                )
+              });
+        } else if (selectedTag && selectedTag.id) {
+            filtered = contacts.filter(t => t.state === selectedTag.name) ;
+        }
         
         const sorted = filtered.sort((a, b) => (sortColumn.order === 'asc' ? a[sortColumn.path] > b[sortColumn.path] : b[sortColumn.path] > a[sortColumn.path]) ? 1 : -1)
         
@@ -83,11 +99,11 @@ const Contacts = () => {
                 <div className="col">
                     <div className="clearfix">
                         <Link to="/contacts/new" className="btn btn-primary mb-2 float-right">
-                            Add Contact
+                        <img className="plus-icon-white" src={PlusIcon} alt="Add Contact" /> Add Contact
                         </Link>
                     </div>
                     <p>Showing {totalCount} contacts</p>
-                    <SearchBox value={searchQuery} onChange={handleSearch} />
+                    <SearchBox value={searchQuery} placeholder="Search name..." onChange={handleSearch} />
                     <ContactsTable
                         contacts={data}
                         sortColumn={sortColumn}

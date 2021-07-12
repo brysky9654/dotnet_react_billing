@@ -36,6 +36,12 @@ code {
   padding-bottom: 3px;
 }
 
+.plus-icon-white {
+  width: 14px;
+  vertical-align: middle;
+  padding-bottom: 3px;
+}
+
 .spinner {
   animation: 2s linear infinite spinner-animation;
   max-width: 30px;

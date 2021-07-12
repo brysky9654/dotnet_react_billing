@@ -18,7 +18,7 @@ export default class App extends Component {
         <Route exact path='/' component={Home} exact />
         <Route path='/login' component={LoginForm} exact />
         <Route path='/register' component={RegisterForm} exact />
-        <Route path='/contacts/new' component={ContactsForm} exact />
+        <Route path='/contacts/:id' component={ContactsForm} exact />
         <Route path='/contacts' component={Contacts} exact />
         <Route path='/invoices' component={Invoices} exact />
       </Layout>
