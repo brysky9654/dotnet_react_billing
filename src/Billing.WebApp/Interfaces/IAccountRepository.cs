@@ -9,8 +9,11 @@ namespace Billing.WebApp.Interfaces
     public interface IAccountRepository
     {
         Task<IdentityResult> RegisterAsync(User user, string password);
-        Task<IdentityResult> AddToRoleAsync(User user);
+        Task<IdentityResult> AddToRoleAsync(User user, string role);
+        Task<IdentityResult> CreateRoleAsync(Role role);
         Task<SignInResult> LoginAsync(User user, string password);
-        Task<User> GetUserAsync(string email);
+        Task<User> GetUserByIdAsync(int id);
+        Task<User> GetUserByUsernameAsync(string email);
+
     }
 }

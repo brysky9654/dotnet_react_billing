@@ -26,12 +26,12 @@ namespace Billing.WebApp.Controllers
                 Email = registerDto.Username.ToLower()
             };
 
-            if (await _accountRepository.GetUserAsync(registerDto.Username) != null) return BadRequest("An account already exists with this email address");
+            if (await _accountRepository.GetUserByUsernameAsync(registerDto.Username) != null) return BadRequest("An account already exists with this email address");
 
             var result = await _accountRepository.RegisterAsync(user, registerDto.Password);
             if (!result.Succeeded) return BadRequest(result.Errors);
 
-            var roleResult = await _accountRepository.AddToRoleAsync(user);
+            var roleResult = await _accountRepository.AddToRoleAsync(user, "Viewer");
             if (!roleResult.Succeeded) return BadRequest(result.Errors);
 
             return new UserDto
@@ -44,7 +44,7 @@ namespace Billing.WebApp.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> LoginAsync(LoginDto loginDto)
         {
-            var user = await _accountRepository.GetUserAsync(loginDto.Username);
+            var user = await _accountRepository.GetUserByUsernameAsync(loginDto.Username);
             if (user == null) return Unauthorized("Invalid username");
 
             var result = await _accountRepository.LoginAsync(user, loginDto.Password);

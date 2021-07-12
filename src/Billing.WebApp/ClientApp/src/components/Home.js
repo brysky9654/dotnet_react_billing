@@ -5,9 +5,9 @@ export class Home extends Component {
 
   render () {
     return (
-      <div>
-        <h1>Hello, world!</h1>
-      </div>
+      <>
+        <h1 className="pb-3 pt-1">Home</h1>
+      </>
     );
   }
 }

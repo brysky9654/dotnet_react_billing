@@ -24,6 +24,16 @@ namespace Billing.WebApp.Data
             if (!await _userManager.Users.AnyAsync(u => u.Id == 1))
             {
                 await SeedUsers();
+
+                if (!await _context.Invoice.AnyAsync(u => u.Id == 1))
+                {
+                    await SeedInvoices();
+                }
+
+                if (!await _context.InvoiceTax.AnyAsync(u => u.Id == 1))
+                {
+                    await SeedInvoiceTaxes();
+                }
             }
         }
         public async Task SeedUsers()
@@ -60,6 +70,61 @@ namespace Billing.WebApp.Data
 
             await _userManager.CreateAsync(admin, "password1");
             await _userManager.AddToRolesAsync(admin, new[] { "Admin" });
+        }
+
+        public async Task SeedInvoices()
+        {
+            if (await _context.Invoice.AnyAsync()) return;
+
+            var contact = new Contact
+            {
+                Name = "John Smith",
+                Email = "john.smith@example.com",
+                Address = "123 Test Street, Sydney",
+                State = "NSW",
+                Country = "AU"
+            };
+
+            _context.Contact.Add(contact);
+
+            var invoiceItems = new List<InvoiceItem>
+            {
+                new InvoiceItem
+                {
+                    Order = 1,
+                    Quantity = 1,
+                    Price = 10.95f,
+                    Description = "Technology services",
+                    TaxAmount = 10.00f
+                }
+            };
+
+            var invoice = new Invoice
+            {
+                Contact = contact,
+                Status = "DRAFT",
+                Notes = "Test note",
+                Reference = "A1",
+                InvoiceItems = invoiceItems
+            };
+
+            _context.Invoice.Add(invoice);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task SeedInvoiceTaxes()
+        {
+            if (await _context.InvoiceTax.AnyAsync()) return;
+
+            var invoiceTax = new InvoiceTax
+            {
+                Name = "GST",
+                Amount = 10.00f
+            };
+
+            _context.InvoiceTax.Add(invoiceTax);
+            await _context.SaveChangesAsync();
+
         }
 
     }
