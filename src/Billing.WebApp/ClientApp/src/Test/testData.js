@@ -1,15 +1,15 @@
 export const tagsData = [
     {
         "id": 1,
-        "name": 'QLD'
+        "name": 'Queensland'
     },
     {
         "id": 2,
-        "name": 'NSW'
+        "name": 'New South Wales'
     },
     {
         "id": 3,
-        "name": 'VIC'
+        "name": 'Victoria'
     }
 ];
 

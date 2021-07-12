@@ -1,23 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
+import { loadContacts } from "../store/contacts";
 import ContactsTable from '../components/ContactsTable';
 import Pagination from '../components/Tables/Pagination';
 import ListGroup from '../components/Tables/ListGroup';
 import SearchBox from '../components/Tables/SearchBox';
+import Spinner from '../components/Spinner/Spinner';
 import { paginate } from '../utils/paginate';
 import PlusIcon from '../assets/icons/plus.svg';
 import { tagsData, contactsData } from '../test/testData';
 
 const Contacts = () => {
+    const dispatch = useDispatch();
+    const allContacts = useSelector(state => state.entities.contacts.data);
+
     const [pageSize, setPageSize] = useState(2);
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedTag, setSelectedTag] = useState(null);
     const [sortColumn, setSortColumn] = useState({ path: 'firstName', order: 'asc'});
     const [searchQuery, setSearchQuery] = useState("");
 
-    const [tags, setTags] = useState([{ id: '', name: "All Tags" }, ...tagsData]);
+    const [tags, setTags] = useState([{ id: '', name: "All Contacts" }, ...tagsData]);
 
-    const [contacts, setContacts] = useState(contactsData);
+    const [contacts, setContacts] = useState(allContacts);
+
+    useEffect(() => {
+        dispatch(loadContacts());
+        setContacts(allContacts);
+    }, [allContacts]);
 
     const handleDelete = contact => {
         if(window.confirm('Are you sure you want to delete this contact?')) {
@@ -55,7 +66,7 @@ const Contacts = () => {
 
     const getPagedData = () => {
 
-        let filtered = contacts;
+        let filtered = [...contacts];
 
         if (searchQuery) {
             filtered = contacts.filter(item => {
@@ -76,6 +87,8 @@ const Contacts = () => {
 
         return { totalCount: filtered.length, data: contactsPage };
     }
+
+    if (allContacts.length <= 0) return <Spinner showText={false} />;
 
     const { length: count } = contacts;
 

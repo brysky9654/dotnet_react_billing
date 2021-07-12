@@ -94,10 +94,10 @@ namespace Billing.WebApp.Data
             var contacts = new List<Contact>
             {
                 new Contact {
-                    FirstName = "John",
+                    FirstName = "Sadie",
                     LastName = "Smith",
                     BusinessName = "ABC Corp",
-                    Email = "john@example.com",
+                    Email = "sadie@example.com",
                     Address = "13 Test Street",
                     City = "Sydney",
                     State = "New South Wales",
@@ -171,6 +171,17 @@ namespace Billing.WebApp.Data
                     Favourited = true
                 },
                 new Contact {
+                    FirstName = "Zack",
+                    LastName = "Park",
+                    BusinessName = "ABC Corp",
+                    Email = "zack@example.com",
+                    Address = "26 Alfred Street",
+                    City = "Melbourne",
+                    State = "Victoria",
+                    Country = "Australia",
+                    Favourited = false
+                },
+                new Contact {
                     FirstName = "Charlie",
                     LastName = "Stevens",
                     BusinessName = "ABC Corp",
@@ -180,6 +191,17 @@ namespace Billing.WebApp.Data
                     State = "Queensland",
                     Country = "Australia",
                     Favourited = false
+                },
+                new Contact {
+                    FirstName = "Tom",
+                    LastName = "Frank",
+                    BusinessName = "Big Inc",
+                    Email = "tom@example.com",
+                    Address = "95 Bruce Avenue",
+                    City = "Melbourne",
+                    State = "Victoria",
+                    Country = "Australia",
+                    Favourited = true
                 }
             };
 

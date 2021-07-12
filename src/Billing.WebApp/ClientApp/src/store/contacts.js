@@ -37,7 +37,7 @@ const url = "contact";
 export const loadContacts = () => (dispatch, getState) => {
 
     // Basic caching to avoid getting data again too soon
-    const { lastFetch } = getState().entities.users;
+    const { lastFetch } = getState().entities.contacts;
     var difference = (Date.now() - lastFetch) / 1000;
 
     if (difference < 60) return;
