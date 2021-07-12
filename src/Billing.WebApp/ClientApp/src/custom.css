@@ -42,6 +42,11 @@ code {
   padding-bottom: 3px;
 }
 
+.spinner-wrapper {
+  white-space: nowrap;
+  padding-right: 10px;
+}
+
 .spinner {
   animation: 2s linear infinite spinner-animation;
   max-width: 30px;
@@ -88,4 +93,12 @@ code {
 .pagination .page-link,
 .list-group {
   cursor: pointer;
+}
+
+.login-form .spinner {
+  max-width: 15px;
+}
+
+.login-form .spinner circle {
+  stroke: #fff;
 }

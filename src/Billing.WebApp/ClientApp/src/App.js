@@ -1,27 +1,33 @@
-import React, { Component } from 'react';
+import React, { useEffect } from "react";
 import { Route } from 'react-router';
+import { useDispatch } from 'react-redux';
+import { authCheck } from './store/auth';
 import { Layout } from './components/Layout';
 import { Home } from './components/Home';
-import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
 import ContactsForm from './components/ContactsForm';
+import Login from './pages/Login';
 import Contacts from './pages/Contacts';
 import Invoices from './pages/Invoices';
-import './custom.css'
+import './custom.css';
 
-export default class App extends Component {
-  static displayName = App.name;
+const App = () => {
+  const dispatch = useDispatch();
 
-  render () {
-    return (
-      <Layout>
+  useEffect(() => {
+    dispatch(authCheck());
+  }, []);
+
+  return (
+    <Layout>
         <Route exact path='/' component={Home} exact />
-        <Route path='/login' component={LoginForm} exact />
+        <Route path='/login' component={Login} exact />
         <Route path='/register' component={RegisterForm} exact />
         <Route path='/contacts/:id' component={ContactsForm} exact />
         <Route path='/contacts' component={Contacts} exact />
         <Route path='/invoices' component={Invoices} exact />
-      </Layout>
-    );
-  }
+    </Layout>
+  );
 }
+
+export default App;
