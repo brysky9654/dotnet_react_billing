@@ -8,7 +8,6 @@ import { paginate } from '../utils/paginate';
 import PlusIcon from '../assets/icons/plus.svg';
 import { tagsData, contactsData } from '../test/testData';
 
-
 const Contacts = () => {
     const [pageSize, setPageSize] = useState(2);
     const [currentPage, setCurrentPage] = useState(1);
