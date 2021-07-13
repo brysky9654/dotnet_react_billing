@@ -207,10 +207,52 @@ namespace Billing.WebApp.Data
 
             contacts.ForEach(c => _context.Contact.Add(c));
 
-            var invoiceItems = new List<InvoiceItem>
+            var invoiceItems1 = new List<InvoiceItem>
             {
-                new InvoiceItem
-                {
+                new InvoiceItem {
+                    Order = 1,
+                    Quantity = 1,
+                    Price = 10.95f,
+                    Description = "Technology services",
+                    TaxAmount = 10.00f
+                },
+                new InvoiceItem {
+                    Order = 2,
+                    Quantity = 2,
+                    Price = 9.95f,
+                    Description = "Web design services",
+                    TaxAmount = 10.00f
+                }
+            };
+
+            var invoiceItems2 = new List<InvoiceItem>
+            {
+                new InvoiceItem {
+                    Order = 1,
+                    Quantity = 1,
+                    Price = 10.00f,
+                    Description = "Technology services",
+                    TaxAmount = 10.00f
+                },
+                new InvoiceItem {
+                    Order = 2,
+                    Quantity = 2,
+                    Price = 5.00f,
+                    Description = "Technology services",
+                    TaxAmount = 10.00f
+                },
+                new InvoiceItem {
+                    Order = 3,
+                    Quantity = 1,
+                    Price = 15.00f,
+                    Description = "Technology services",
+                    TaxAmount = 10.00f
+                }
+            };
+
+            var invoiceItems3 = new List<InvoiceItem>
+            {
+                new InvoiceItem {
                     Order = 1,
                     Quantity = 1,
                     Price = 10.95f,
@@ -219,16 +261,35 @@ namespace Billing.WebApp.Data
                 }
             };
 
-            var invoice = new Invoice
+
+
+            var invoices = new List<Invoice>
             {
-                Contact = contact,
-                Status = "DRAFT",
-                Notes = "Test note",
-                Reference = "A1",
-                InvoiceItems = invoiceItems
+                new Invoice {
+                    Contact = contact,
+                    Status = "PUBLISHED",
+                    Notes = "Test note",
+                    Reference = "A123",
+                    InvoiceItems = invoiceItems1
+                },
+                new Invoice {
+                    Contact = contact,
+                    Status = "DRAFT",
+                    Notes = "Test note 2",
+                    Reference = "B123",
+                    InvoiceItems = invoiceItems2
+                },
+                new Invoice {
+                    Contact = contact,
+                    Status = "REVERSED",
+                    Notes = "Test note 3",
+                    Reference = "C123",
+                    InvoiceItems = invoiceItems3
+                }
+
             };
 
-            _context.Invoice.Add(invoice);
+            invoices.ForEach(i => _context.Invoice.Add(i));
             await _context.SaveChangesAsync();
         }
 

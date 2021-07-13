@@ -7,10 +7,10 @@ const InvoicesTable = ({ invoices, sortColumn, onDelete, onSort }) => {
         { path: 'id', name: 'No.' },
         { path: 'reference', name: 'Ref' },
         { key: 'customer', name: 'Name', content: invoice => invoice.contact.businessName },
-        { key: 'price', name: 'Price', content: invoice => "$" + invoice.invoiceItems.map(item => item.price).reduce((prev, next) => prev + next) },
+        { key: 'price', name: 'Price', content: invoice => "$" + invoice.invoiceItems.map(item => item.price * item.quantity).reduce((prev, next) => prev + next).toFixed(2) },
         { key: 'created', name: 'Created', content: invoice => new Date(invoice.created).toLocaleDateString() },
-        { key: 'due', name: 'Due', content: invoice => new Date(invoice.created).toLocaleDateString() },
-        { key: 'paid', name: 'Paid', content: invoice => invoice.created ? "Yes" : "No" },
+        { key: 'due', name: 'Due', content: invoice => new Date(invoice.due).toLocaleDateString() },
+        { key: 'paid', name: 'Paid', content: invoice => invoice.paid ? "Yes" : "No" },
         { path: 'status', name: 'Status' },
         { key: 'edit', content: invoice => <Link to={"/invoices/" + invoice.id} className="btn btn-warning btn-sm">Edit</Link> },
         { key: 'delete', content: invoice => <button onClick={() => onDelete(invoice)} className="btn btn-danger btn-sm">Delete</button> }

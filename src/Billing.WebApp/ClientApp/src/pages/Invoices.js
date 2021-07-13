@@ -17,7 +17,7 @@ const Invoices = () => {
     const [pageSize] = useState(2);
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedTag, setSelectedTag] = useState(null);
-    const [sortColumn, setSortColumn] = useState({ path: 'firstName', order: 'asc'});
+    const [sortColumn, setSortColumn] = useState({ path: 'id', order: 'asc'});
     const [searchQuery, setSearchQuery] = useState("");
 
     const [tags] = useState([
