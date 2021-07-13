@@ -3,10 +3,10 @@ import { Redirect } from "react-router-dom";
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import Joi from 'joi-browser';
 import { useDispatch, useSelector } from "react-redux";
-import { loadContacts, createContact, updateContact } from "../store/contacts";
-import Spinner from '../components/Spinner/Spinner';
-import Form from './Forms/Form';
-import Input from './Forms/Input';
+import { loadContacts, createContact, updateContact } from "../../store/contacts";
+import Spinner from '../Spinner/Spinner';
+import Form from '../Forms/Form';
+import Input from '../Forms/Input';
 
 const ContactsForm = ({ history, match }) => {
     const dispatch = useDispatch();

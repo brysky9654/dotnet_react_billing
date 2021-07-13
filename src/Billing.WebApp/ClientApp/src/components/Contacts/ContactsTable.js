@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Favourite from './Tables/Favourite';
-import Table from './Tables/Table';
+import Favourite from '../Tables/Favourite';
+import Table from '../Tables/Table';
 
 const ContactsTable = ({ contacts, sortColumn, onFavourite, onDelete, onSort }) => {
     const columns = [

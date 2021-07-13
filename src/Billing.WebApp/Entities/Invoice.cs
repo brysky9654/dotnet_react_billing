@@ -12,7 +12,7 @@ namespace Billing.WebApp.Entities
         public string Reference { get; set; }
         public DateTime Created { get; set; } = DateTime.Now;
         public DateTime Due { get; set; } = DateTime.Today.AddDays(7);
-        public DateTime Paid { get; set; }
+        public DateTime? Paid { get; set; } = null;
         public ICollection<InvoiceItem> InvoiceItems { get; set; }
     }
 }

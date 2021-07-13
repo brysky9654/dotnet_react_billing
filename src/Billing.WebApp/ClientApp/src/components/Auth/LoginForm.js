@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import Joi from 'joi-browser';
 import { useDispatch, useSelector } from "react-redux";
-import { authLogin } from "../store/auth";
-import Form from './Forms/Form';
-import Input from './Forms/Input';
-import Button from './Forms/Button';
+import { authLogin } from "../../store/auth";
+import Form from '../Forms/Form';
+import Input from '../Forms/Input';
+import Button from '../Forms/Button';
 
 const LoginForm = () => {
     const dispatch = useDispatch();

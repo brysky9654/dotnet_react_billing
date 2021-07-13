@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { loadContacts, deleteContact, updateContact } from "../store/contacts";
-import ContactsTable from '../components/ContactsTable';
+import ContactsTable from '../components/Contacts/ContactsTable';
 import Pagination from '../components/Tables/Pagination';
 import ListGroup from '../components/Tables/ListGroup';
 import SearchBox from '../components/Tables/SearchBox';
