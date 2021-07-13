@@ -57,7 +57,7 @@ namespace Billing.WebApp.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateContactAsync(int id, ContactDto contactDto)
+        public async Task<ActionResult<Contact>> UpdateContactAsync(int id, ContactDto contactDto)
         {
             var contact = await _unitOfWork.ContactRepository.GetContactAsync(id);
 
@@ -75,14 +75,14 @@ namespace Billing.WebApp.Controllers
 
             if (await _unitOfWork.Complete())
             {
-                return NoContent();
+                return Ok(contact);
             }
 
             return BadRequest("Unable to update contact");
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteContactAsync(int id)
+        public async Task<ActionResult<Contact>> DeleteContactAsync(int id)
         {
             var contact = await _unitOfWork.ContactRepository.GetContactAsync(id);
 
@@ -90,7 +90,7 @@ namespace Billing.WebApp.Controllers
 
             if (await _unitOfWork.Complete())
             {
-                return Ok();
+                return Ok(contact);
             }
 
             return BadRequest("Unable to delete contact");

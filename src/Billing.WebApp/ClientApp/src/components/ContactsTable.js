@@ -19,16 +19,12 @@ const ContactsTable = ({ contacts, sortColumn, onFavourite, onDelete, onSort }) 
     ];
 
     return (
-        <div className="table-responsive">
-            <table className="table table-hover">
-                <Table 
-                    data={contacts}
-                    columns={columns}
-                    sortColumn={sortColumn}
-                    onSort={onSort}
-                />
-            </table>
-        </div>
+        <Table 
+            data={contacts}
+            columns={columns}
+            sortColumn={sortColumn}
+            onSort={onSort}
+        />
     );
 }
 

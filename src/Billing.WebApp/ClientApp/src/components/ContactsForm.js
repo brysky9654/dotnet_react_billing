@@ -1,22 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { Redirect } from "react-router-dom";
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import Joi from 'joi-browser';
+import { useDispatch, useSelector } from "react-redux";
+import { loadContacts, createContact, updateContact } from "../store/contacts";
+import Spinner from '../components/Spinner/Spinner';
 import Form from './Forms/Form';
 import Input from './Forms/Input';
 
 const ContactsForm = ({ history, match }) => {
-
-    useEffect(() => {
-        const contactId = match.params.id;
-        console.log(contactId);
-        if (contactId === 'new') return;
-
-        // get the data from the server here
-        const contact = null; // replace
-        if (!contact) return history.replace('/not-found');
-        // map contact data gere
-      }, []);
-
+    const dispatch = useDispatch();
+    const allContacts = useSelector(state => state.entities.contacts.data);
+    const [contactId] = useState(match.params.id);
     const [data, setdata] = useState({
         firstName: "",
         lastName: "",
@@ -25,7 +20,7 @@ const ContactsForm = ({ history, match }) => {
         address: "",
         city: "",
         country: "",
-        region: ""
+        state: ""
     });
     const [errors, setErrors] = useState({
         firstName: null,
@@ -34,34 +29,52 @@ const ContactsForm = ({ history, match }) => {
         address: null,
         city: null,
         country: null,
-        region: null
+        state: null
     });
 
+    const newUrl = 'new';
+    const count = allContacts.length;
+
+    useEffect(() => {
+        dispatch(loadContacts());
+        // const contactId = match.params.id;
+        if (contactId === newUrl) return;
+
+        const contact = allContacts.find(c => c.id === parseInt(contactId));
+        //if (!contact) return history.replace('/not-found');
+        if (!contact) return;
+        setdata(contact);
+      }, [allContacts, contactId, dispatch]);
+
     const schema = {
+        id: Joi.number(),
         firstName: Joi.string()
-            .required()
-            .label('First Name'),
+        .required()
+        .label('First Name'),
         lastName: Joi.string()
-            .required()
-            .label('Last Name'),
+        .required()
+        .label('Last Name'),
         businessName: Joi.string()
-            .required()
-            .label('Business Name'),
+        .required()
+        .label('Business Name'),
         email: Joi.string()
-            .required()
-            .label('Email'),
+        .required()
+        .label('Email'),
         address: Joi.string()
-            .required()
-            .label('Address'),
+        .required()
+        .label('Address'),
         city: Joi.string()
-            .required()
-            .label('City / Suburb'),
+        .required()
+        .label('City / Suburb'),
         country: Joi.string()
-            .required()
-            .label('Country'),
-        region: Joi.string()
-            .required()
-            .label('State / Province')
+        .required()
+        .label('Country'),
+        state: Joi.string()
+        .required()
+        .label('State / Province'),
+        favourited: Joi.boolean(),
+        created: Joi.string(),
+        updated: Joi.string()
     };
 
     const handleChange = e => {
@@ -78,20 +91,24 @@ const ContactsForm = ({ history, match }) => {
     
     const selectRegion = (region) => {
         const formInput = { ...data };
-        formInput.region = region;
+        formInput.state = region;
         setdata(formInput);
     }
 
     const handleSubmission = () => {
-        console.log("test2");
         console.log(data);
-        // call backend service
+        if (contactId === newUrl) dispatch(createContact(data));
+        else dispatch(updateContact(data));
+
         history.push("/contacts");
     }
+
+    if (count <= 0 && contactId !== newUrl) return <Spinner showText={false} />;
+    if (count >= 1 && contactId !== newUrl && !allContacts.find(c => c.id === parseInt(contactId))) return <Redirect to="/not-found" />;
     
     return (
         <>
-            <h1 className="pb-3 pt-1">Add Contact</h1>
+            <h1 className="pb-3 pt-1">{ contactId === newUrl ? "Add New" : "Update"} Contact</h1>
             <Form 
                 data={data}
                 schema={schema}
@@ -141,7 +158,7 @@ const ContactsForm = ({ history, match }) => {
                     error={errors.city}
                 />
                 <div className="form-group">
-                    <label for="country">Country</label>
+                    <label htmlFor="country">Country</label>
                     <CountryDropdown
                         className="form-control form-select"
                         id="country"
@@ -151,16 +168,16 @@ const ContactsForm = ({ history, match }) => {
                     />
                 </div>
                 <div className="form-group">
-                    <label for="region">State / Province</label>
+                    <label htmlFor="state">State / Province</label>
                     <RegionDropdown
                         className="form-control form-select"
-                        id="region"
+                        id="state"
                         country={data.country}
-                        value={data.region}
-                        onChange={(region) => selectRegion(region)}
+                        value={data.state}
+                        onChange={(state) => selectRegion(state)}
                     />
                 </div>
-                <button className="btn btn-primary mt-2 mb-5">Add New Contact</button>
+                <button className="btn btn-primary mt-2 mb-5">{ contactId === newUrl ? "Add New" : "Update"} Contact</button>
             </Form>
         </>
     );

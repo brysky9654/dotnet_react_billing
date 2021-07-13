@@ -6,6 +6,8 @@ const Form = ({ data, schema, children, onError, onSubmission }) => {
     const validate = () => {
         const options = { abortEarly: false };
         const { error } = Joi.validate(data, schema, options);
+
+        console.log(error);
         
         if (!error) return null;
         

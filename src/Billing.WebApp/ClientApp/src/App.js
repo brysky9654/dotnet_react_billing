@@ -16,11 +16,11 @@ const App = () => {
 
   useEffect(() => {
     dispatch(authCheck());
-  }, []);
+  }, [dispatch]);
 
   return (
     <Layout>
-        <Route exact path='/' component={Home} exact />
+        <Route path='/' component={Home} exact />
         <Route path='/login' component={Login} exact />
         <Route path='/register' component={RegisterForm} exact />
         <Route path='/contacts/:id' component={ContactsForm} exact />

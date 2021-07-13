@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
-import { loadContacts } from "../store/contacts";
+import { loadContacts, deleteContact, updateContact } from "../store/contacts";
 import ContactsTable from '../components/ContactsTable';
 import Pagination from '../components/Tables/Pagination';
 import ListGroup from '../components/Tables/ListGroup';
@@ -9,29 +9,33 @@ import SearchBox from '../components/Tables/SearchBox';
 import Spinner from '../components/Spinner/Spinner';
 import { paginate } from '../utils/paginate';
 import PlusIcon from '../assets/icons/plus.svg';
-import { tagsData, contactsData } from '../test/testData';
 
 const Contacts = () => {
     const dispatch = useDispatch();
     const allContacts = useSelector(state => state.entities.contacts.data);
 
-    const [pageSize, setPageSize] = useState(2);
+    const [pageSize] = useState(2);
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedTag, setSelectedTag] = useState(null);
     const [sortColumn, setSortColumn] = useState({ path: 'firstName', order: 'asc'});
     const [searchQuery, setSearchQuery] = useState("");
 
-    const [tags, setTags] = useState([{ id: '', name: "All Contacts" }, ...tagsData]);
+    const [tags] = useState([
+        { id: '', name: "All Contacts", value: null },
+        { id: 1, name: "Favourited", value: true },
+        { id: 2, name: "Not Favourited", value: false }
+    ]);
 
     const [contacts, setContacts] = useState(allContacts);
 
     useEffect(() => {
         dispatch(loadContacts());
         setContacts(allContacts);
-    }, [allContacts]);
+    }, [allContacts, dispatch]);
 
     const handleDelete = contact => {
         if(window.confirm('Are you sure you want to delete this contact?')) {
+            dispatch(deleteContact(contact.id));
             setContacts(contacts.filter(c => c.id !== contact.id));
         }
     };
@@ -41,6 +45,7 @@ const Contacts = () => {
         const index = contactsData.indexOf(contact);
         contactsData[index] = {...contactsData[index]};
         contactsData[index].favourited = !contactsData[index].favourited;
+        dispatch(updateContact(contactsData[index]));
         setContacts(contactsData);
     };
 
@@ -78,7 +83,7 @@ const Contacts = () => {
                 )
               });
         } else if (selectedTag && selectedTag.id) {
-            filtered = contacts.filter(t => t.state === selectedTag.name) ;
+            filtered = contacts.filter(t => t.favourited === selectedTag.value) ;
         }
         
         const sorted = filtered.sort((a, b) => (sortColumn.order === 'asc' ? a[sortColumn.path] > b[sortColumn.path] : b[sortColumn.path] > a[sortColumn.path]) ? 1 : -1)
