@@ -27,7 +27,7 @@ const TableHeader = ({ columns, sortColumn, onSort }) => {
                 {columns.map(column => (
                     <th 
                         key={column.path || column.key}
-                        onClick={() => raiseSort(column.path)}
+                        onClick={() => sortColumn.path ? raiseSort(column.path) : null}
                         scope="col"
                     >
                         {column.name}
@@ -37,6 +37,13 @@ const TableHeader = ({ columns, sortColumn, onSort }) => {
             </tr>
         </thead>
     );
+}
+
+TableHeader.defaultProps = {
+    sortColumn: {
+        path: null
+    },
+    onSort: ''
 }
 
 export default TableHeader;

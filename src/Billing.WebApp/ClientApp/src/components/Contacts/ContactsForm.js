@@ -37,11 +37,9 @@ const ContactsForm = ({ history, match }) => {
 
     useEffect(() => {
         dispatch(loadContacts());
-        // const contactId = match.params.id;
         if (contactId === newUrl) return;
 
         const contact = allContacts.find(c => c.id === parseInt(contactId));
-        //if (!contact) return history.replace('/not-found');
         if (!contact) return;
         setdata(contact);
       }, [allContacts, contactId, dispatch]);
@@ -95,8 +93,8 @@ const ContactsForm = ({ history, match }) => {
         setdata(formInput);
     }
 
-    const handleSubmission = () => {
-        console.log(data);
+    const handleSubmission = e => {
+        e.preventDefault();
         if (contactId === newUrl) dispatch(createContact(data));
         else dispatch(updateContact(data));
 
@@ -113,7 +111,7 @@ const ContactsForm = ({ history, match }) => {
                 data={data}
                 schema={schema}
                 onError={setErrors}
-                onSubmission={handleSubmission}
+                onSubmission={e => handleSubmission(e)}
             >
                 <Input 
                     name="firstName"
@@ -177,7 +175,7 @@ const ContactsForm = ({ history, match }) => {
                         onChange={(state) => selectRegion(state)}
                     />
                 </div>
-                <button className="btn btn-primary mt-2 mb-5">{ contactId === newUrl ? "Add New" : "Update"} Contact</button>
+                <button className="btn btn-primary mt-2 mb-5">Save Contact</button>
             </Form>
         </>
     );

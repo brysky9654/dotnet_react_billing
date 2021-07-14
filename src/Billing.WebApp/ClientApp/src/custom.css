@@ -102,3 +102,7 @@ code {
 .login-form .spinner circle {
   stroke: #fff;
 }
+
+.date-input label {
+  display: block;
+}

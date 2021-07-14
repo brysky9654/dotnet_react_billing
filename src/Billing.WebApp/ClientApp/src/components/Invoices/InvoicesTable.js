@@ -8,7 +8,6 @@ const InvoicesTable = ({ invoices, sortColumn, onDelete, onSort }) => {
         { path: 'reference', name: 'Ref' },
         { key: 'customer', name: 'Name', content: invoice => invoice.contact.businessName },
         { key: 'price', name: 'Price', content: invoice => "$" + invoice.invoiceItems.map(item => item.price * item.quantity).reduce((prev, next) => prev + next).toFixed(2) },
-        { key: 'created', name: 'Created', content: invoice => new Date(invoice.created).toLocaleDateString() },
         { key: 'due', name: 'Due', content: invoice => new Date(invoice.due).toLocaleDateString() },
         { key: 'paid', name: 'Paid', content: invoice => invoice.paid ? "Yes" : "No" },
         { path: 'status', name: 'Status' },

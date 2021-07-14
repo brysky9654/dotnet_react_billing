@@ -76,7 +76,7 @@ const Invoices = () => {
                 )
               });
         } else if (selectedTag && selectedTag.id) {
-            filtered = invoices.filter(t => t.status === selectedTag.value) ;
+            filtered = invoices.filter(t => t.status === selectedTag.value);
         }
         
         const sorted = filtered.sort((a, b) => (sortColumn.order === 'asc' ? a[sortColumn.path] > b[sortColumn.path] : b[sortColumn.path] > a[sortColumn.path]) ? 1 : -1)
