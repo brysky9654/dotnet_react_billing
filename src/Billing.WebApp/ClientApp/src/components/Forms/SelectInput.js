@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Select from 'react-select';
 
-const SelectInput = ({ items, name, value, label, path, onChange }) => {
+const SelectInput = ({ items, name, value, label, path, error, onChange }) => {
     return (
         <div className="form-group date-input">
             {label ? <label htmlFor={name}>{label}</label> : null}
@@ -11,6 +11,7 @@ const SelectInput = ({ items, name, value, label, path, onChange }) => {
                 onChange={value => onChange({target: {name: path, value: value.value}})}
                 options={items}
             />
+            {error && <div className="alert alert-danger">{error}</div>}
         </div>
     );
 }

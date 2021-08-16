@@ -29,6 +29,7 @@ namespace Billing.WebApp.Data
                     Created = i.Created,
                     Due = i.Due,
                     Paid = i.Paid,
+                    TaxInclusive = i.TaxInclusive,
                     InvoiceItems = i.InvoiceItems.Select(x => new InvoiceItem
                     {
                         Id = x.Id,
@@ -38,7 +39,7 @@ namespace Billing.WebApp.Data
                         Description = x.Description,
                         TaxAmount = x.TaxAmount,
                         TaxPercentage = x.TaxPercentage,
-                        TaxInclusive = x.TaxInclusive
+                        InvoiceTaxId = x.InvoiceTaxId
                     }).ToList()
                 })
                 .ToListAsync();
@@ -56,6 +57,7 @@ namespace Billing.WebApp.Data
                     Created = i.Created,
                     Due = i.Due,
                     Paid = i.Paid,
+                    TaxInclusive = i.TaxInclusive,
                     InvoiceItems = i.InvoiceItems.Select(x => new InvoiceItem
                     {
                         Id = x.Id,
@@ -65,7 +67,7 @@ namespace Billing.WebApp.Data
                         Description = x.Description,
                         TaxAmount = x.TaxAmount,
                         TaxPercentage = x.TaxPercentage,
-                        TaxInclusive = x.TaxInclusive
+                        InvoiceTaxId = x.InvoiceTaxId
                     }).ToList()
                 })
                 .Where(x => x.Id == id)

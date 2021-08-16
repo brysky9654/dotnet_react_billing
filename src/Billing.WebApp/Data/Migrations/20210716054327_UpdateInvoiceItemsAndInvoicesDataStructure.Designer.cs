@@ -3,14 +3,16 @@ using System;
 using Billing.WebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Billing.WebApp.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210716054327_UpdateInvoiceItemsAndInvoicesDataStructure")]
+    partial class UpdateInvoiceItemsAndInvoicesDataStructure
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -112,7 +114,7 @@ namespace Billing.WebApp.Data.Migrations
                     b.Property<int?>("InvoiceId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("InvoiceTaxId")
+                    b.Property<int?>("InvoiceTaxId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Order")
@@ -383,9 +385,7 @@ namespace Billing.WebApp.Data.Migrations
 
                     b.HasOne("Billing.WebApp.Entities.InvoiceTax", "InvoiceTax")
                         .WithMany()
-                        .HasForeignKey("InvoiceTaxId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("InvoiceTaxId");
 
                     b.Navigation("Invoice");
 

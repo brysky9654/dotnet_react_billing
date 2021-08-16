@@ -2,47 +2,64 @@ import React, { useState, useEffect } from 'react';
 import { Redirect } from "react-router-dom";
 import Joi from 'joi-browser';
 import { useDispatch, useSelector } from "react-redux";
-import { loadInvoices } from "../../store/invoices";
-import { loadContacts } from "../../store/contacts";
+import { loadInvoices, createInvoice, updateInvoice } from "../../store/invoices";
 import Spinner from '../Spinner/Spinner';
 import Form from '../Forms/Form';
-import Input from '../Forms/Input';
-import InvoiceItemsForm from './InvoiceItemsForm';
-import DateInput from '../Forms/DateInput';
-import SelectInput from '../Forms/SelectInput';
+import InvoiceFormHeader from './InvoiceFormHeader';
+import InvoiceFormBody from './InvoiceFormBody';
+import InvoiceFormFooter from './InvoiceFormFooter';
+import InvoiceTotal from './InvoiceTotal';
 
 const InvoicesForm = ({ history, match }) => {
     const dispatch = useDispatch();
     const allInvoices = useSelector(state => state.entities.invoices.data);
-    const allContacts = useSelector(state => state.entities.contacts.data);
     const [invoiceId] = useState(match.params.id);
     const [data, setdata] = useState({
         id: "",
         reference: "",
-        status: "",
+        status: "DRAFT",
         notes: "",
         contact: {
             businessName: ""
         },
-        invoiceItems: [],
+        invoiceItems: [
+            {
+                description: "",
+                order: 1,
+                price: 0,
+                quantity: 1,
+                taxAmount: 0
+            }
+        ],
         contactId: "",
-        created: "",
-        due: "",
-        paid: ""
-
+        created: (new Date().toString()),
+        due: (new Date(new Date().setDate(new Date().getDate() + 7))).toString(),
+        paid: "",
+        taxInclusive: true
     });
     const [errors, setErrors] = useState({
         id: null,
         reference: null,
         status: null,
         notes: null,
-        invoiceItems: null,
+        invoiceItems: [
+            {
+                description: null,
+                order: null,
+                price: null,
+                quantity: null,
+                taxAmount: null
+            }
+        ],
         contact: {
             businessName: null
         },
+        contactId: null,
         created: null,
         due: null,
-        paid: null
+        paid: null,
+        taxInclusive: null,
+        invoiceTaxes: null
     });
 
     const newUrl = 'new';
@@ -50,7 +67,6 @@ const InvoicesForm = ({ history, match }) => {
 
     useEffect(() => {
         dispatch(loadInvoices());
-        dispatch(loadContacts());
         if (invoiceId === newUrl) return;
 
         const invoice = allInvoices.find(c => c.id === parseInt(invoiceId));
@@ -59,90 +75,65 @@ const InvoicesForm = ({ history, match }) => {
             ...invoice,
             contactId: invoice.contact.id       
         });
-      }, [allInvoices, allContacts, invoiceId, dispatch]);
+      }, [allInvoices, invoiceId, dispatch]);
 
     const schema = {
-        id: Joi.number(),
-        reference: Joi.string(),
-        status: Joi.string(),
+        reference: Joi.string().allow(null, '').label('Reference'),
+        status: Joi.string().label('Status'),
         invoiceItems: Joi.array()
         .items({
-          keyword: Joi.string()
-            .required(),
-          country_code: Joi.string()
-            .required(),
-          language: Joi.string()
-            .required(),
-          depth: Joi.number()
-            .required(),
+            id: Joi.number(),
+            description: Joi.string().allow(null, ''),
+            order: Joi.number(),
+            price: Joi.number(),
+            quantity: Joi.number(),
+            taxAmount: Joi.number(),
+            invoiceTaxId: Joi.number()
         }),
+        contactId: Joi.number(),
+        created: Joi.string().label('Date'),
+        due: Joi.string().label('Due'),
+        paid: Joi.string().allow(null, '').label('Paid'),
+        notes: Joi.string().allow(null, '').label('Notes'),
+        taxInclusive: Joi.boolean()
     };
 
     const handleChange = e => {
         const formInput = JSON.parse(JSON.stringify(data));
         formInput[e.target.name] = e.target.value;
         setdata(formInput);
+        console.log(formInput);
     }
 
-    const handleSubmission = e => {
-        e.preventDefault();
+    const handleSubmission = () => {
         console.log(data);
-        // if (contactId === newUrl) dispatch(createContact(data));
-        // else dispatch(updateContact(data));
-        //history.push("/invoices");
+        if (invoiceId === newUrl) dispatch(createInvoice(data));
+        // else dispatch(updateInvoice(data));
+
+        // history.push("/invoices");
     }
 
     const handleAddRepeatable = e => {
         e.preventDefault();
-        console.log(e);
-
-        //const formInput = { ...data };
         const formInput = JSON.parse(JSON.stringify(data));
 
+        let orderId = 1;
+        if (formInput.invoiceItems.length > 0) orderId = formInput.invoiceItems[formInput.invoiceItems.length -1].order + 1;
+
         formInput.invoiceItems.push({
-            order: formInput.invoiceItems[formInput.invoiceItems.length - 1] + 1,
+            id: 'new' + orderId,
+            order: orderId,
             quantity: 0,
             price: 0,
             description: '',
             taxAmount: 0,
-            taxPercentage: true,
-            taxInclusive: true 
+            taxPercentage: true
         });
         setdata(formInput);
     }
 
-    const handleDelete = invoice => {
-        if(window.confirm('Are you sure you want to delete this row?')) {
-            console.log(invoice);
-            // dispatch(deleteInvoice(invoice.id));
-            // setInvoices(invoices.filter(c => c.id !== invoice.id));
-        }
-    };
-
-    const handleContactList = () => {
-        let contactData = [];
-
-        allContacts.forEach(opt =>
-            contactData.push({
-                value: opt.id,
-                label: opt.businessName + ': ' + opt.firstName + ' ' + opt.lastName
-            })
-        );
-
-        return contactData.sort((a, b) =>  a.label > b.label ? 1 : -1)
-    }
-
-    const handleContactUpdate = () => {
-        const updatedContact = allContacts.find(c => c.id === data.contactId);
-        if (!updatedContact) return null;
-        return updatedContact.businessName + ': ' + updatedContact.firstName + ' ' + updatedContact.lastName;
-    }
-
     if (count <= 0 && invoiceId !== newUrl) return <Spinner showText={false} />;
     if (count >= 1 && invoiceId !== newUrl && !allInvoices.find(c => c.id === parseInt(invoiceId))) return <Redirect to="/not-found" />;
-    
-    const contactList = handleContactList();
-    const contactLabel = handleContactUpdate();
 
     return (
         <>
@@ -153,62 +144,25 @@ const InvoicesForm = ({ history, match }) => {
                 onError={setErrors}
                 onSubmission={e => handleSubmission(e)}
             >
-                <div className="row">
-                    <div className="col-3">
-                        <SelectInput
-                            name="contact"
-                            items={contactList}
-                            value={{
-                                value: data.contactId,
-                                label: contactLabel
-                            }}
-                            path="contactId"
-                            label="Contact"
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="col-3">
-                        <Input 
-                            name="reference"
-                            value={data.reference}
-                            label="Reference"
-                            onChange={handleChange}
-                            error={errors.reference}
-                        />
-                    </div>
-                    <div className="col-2">
-                        <DateInput
-                            name="created"
-                            value={data.created}
-                            label="Date"
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="col-2">
-                        <DateInput
-                            name="due"
-                            value={data.due}
-                            label="Due"
-                            onChange={handleChange}
-                        />
-                    </div>
-                </div>
-                <InvoiceItemsForm
+                <InvoiceFormHeader
                     data={data}
-                    onDelete={handleDelete}
+                    errors={errors}
+                    onChange={handleChange}
+                />
+                <InvoiceFormBody
+                    data={data.invoiceItems}
+                    errors={errors}
+                    path="invoiceItems"
+                    onChange={handleChange}
                     onAddRepeatable={handleAddRepeatable}
                 />
-                <Input 
-                    name="notes"
-                    value={data.notes}
-                    label="Notes"
-                    onChange={handleChange}
-                    error={errors.notes}
+                <InvoiceTotal 
+                    data={data.invoiceItems}
+                    taxInclusive={JSON.parse(data.taxInclusive)}
                 />
-                <DateInput
-                    name="paid"
-                    value={data.paid}
-                    label="Paid"
+                <InvoiceFormFooter
+                    data={data}
+                    errors={errors}
                     onChange={handleChange}
                 />
                 <div className="row">

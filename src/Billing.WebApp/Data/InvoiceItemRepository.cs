@@ -23,10 +23,14 @@ namespace Billing.WebApp.Data
                 .ToListAsync();
         }
 
-        public void CreateInvoiceItemsAsync(Invoice invoice, IEnumerable<InvoiceItemDto> invoiceItemsDto)
+        public async Task CreateInvoiceItemsAsync(Invoice invoice, IEnumerable<InvoiceItemDto> invoiceItemsDto)
         {
             foreach (var invoiceItemDto in invoiceItemsDto)
             {
+                var invoiceTax = await _context.InvoiceTax
+                    .Where(x => x.Id == invoiceItemDto.InvoiceTaxId)
+                    .SingleOrDefaultAsync();
+
                 var invoiceItem = new InvoiceItem
                 {
                     Invoice = invoice,
@@ -36,7 +40,7 @@ namespace Billing.WebApp.Data
                     Description = invoiceItemDto.Description,
                     TaxAmount = invoiceItemDto.TaxAmount,
                     TaxPercentage = invoiceItemDto.TaxPercentage,
-                    TaxInclusive = invoiceItemDto.TaxInclusive
+                    InvoiceTaxId = invoiceItemDto.InvoiceTaxId
                 };
 
                 _context.InvoiceItem.Add(invoiceItem);

@@ -29,11 +29,6 @@ namespace Billing.WebApp.Data
                 {
                     await SeedInvoices();
                 }
-
-                if (!await _context.InvoiceTax.AnyAsync(u => u.Id == 1))
-                {
-                    await SeedInvoiceTaxes();
-                }
             }
         }
         public async Task SeedUsers()
@@ -207,6 +202,21 @@ namespace Billing.WebApp.Data
 
             contacts.ForEach(c => _context.Contact.Add(c));
 
+            var invoiceTax1 = new InvoiceTax
+            {
+                Name = "GST",
+                Amount = 10.00f
+            };
+
+            var invoiceTax2 = new InvoiceTax
+            {
+                Name = "No GST",
+                Amount = 0.00f
+            };
+
+            _context.InvoiceTax.Add(invoiceTax1);
+            _context.InvoiceTax.Add(invoiceTax2);
+
             var invoiceItems1 = new List<InvoiceItem>
             {
                 new InvoiceItem {
@@ -214,14 +224,16 @@ namespace Billing.WebApp.Data
                     Quantity = 1,
                     Price = 10.95f,
                     Description = "Technology services",
-                    TaxAmount = 10.00f
+                    TaxAmount = 10.00f,
+                    InvoiceTaxId = invoiceTax1.Id
                 },
                 new InvoiceItem {
                     Order = 2,
                     Quantity = 2,
                     Price = 9.95f,
                     Description = "Web design services",
-                    TaxAmount = 10.00f
+                    TaxAmount = 10.00f,
+                    InvoiceTaxId = invoiceTax2.Id
                 }
             };
 
@@ -232,21 +244,24 @@ namespace Billing.WebApp.Data
                     Quantity = 1,
                     Price = 10.00f,
                     Description = "Technology services",
-                    TaxAmount = 10.00f
+                    TaxAmount = 10.00f,
+                    InvoiceTaxId = invoiceTax1.Id
                 },
                 new InvoiceItem {
                     Order = 2,
                     Quantity = 2,
                     Price = 5.00f,
                     Description = "Technology services",
-                    TaxAmount = 10.00f
+                    TaxAmount = 10.00f,
+                    InvoiceTaxId = invoiceTax1.Id
                 },
                 new InvoiceItem {
                     Order = 3,
                     Quantity = 1,
                     Price = 15.00f,
                     Description = "Technology services",
-                    TaxAmount = 10.00f
+                    TaxAmount = 10.00f,
+                    InvoiceTaxId = invoiceTax1.Id
                 }
             };
 
@@ -257,11 +272,10 @@ namespace Billing.WebApp.Data
                     Quantity = 1,
                     Price = 10.95f,
                     Description = "Technology services",
-                    TaxAmount = 10.00f
+                    TaxAmount = 10.00f,
+                    InvoiceTaxId = invoiceTax1.Id
                 }
             };
-
-
 
             var invoices = new List<Invoice>
             {
@@ -291,21 +305,6 @@ namespace Billing.WebApp.Data
 
             invoices.ForEach(i => _context.Invoice.Add(i));
             await _context.SaveChangesAsync();
-        }
-
-        public async Task SeedInvoiceTaxes()
-        {
-            if (await _context.InvoiceTax.AnyAsync()) return;
-
-            var invoiceTax = new InvoiceTax
-            {
-                Name = "GST",
-                Amount = 10.00f
-            };
-
-            _context.InvoiceTax.Add(invoiceTax);
-            await _context.SaveChangesAsync();
-
         }
 
     }

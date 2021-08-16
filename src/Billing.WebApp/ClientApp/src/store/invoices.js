@@ -78,15 +78,15 @@ export const createInvoice = (data) => requestStarted({
     url,
     method: 'post',
     data: {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        businessName: data.businessName,
-        email: data.email,
-        address: data.address,
-        city: data.city,
-        state: data.state,
-        country: data.country,
-        favourited: false
+        contactId: data.contactId,
+        status: data.status,
+        notes: data.notes,
+        reference: data.reference,
+        taxInclusive: data.taxInclusive,
+        invoiceItems: data.invoiceItems,
+        created: convertStringToDate(data.created),
+        due: convertStringToDate(data.due),
+        paid: convertStringToDate(data.paid)
     },
     onStart: invoicesUpdateStarted.type,
     onSuccess: invoicesCreateComplete.type,
@@ -119,3 +119,9 @@ export const deleteInvoice = (id) => requestStarted({
     onSuccess: invoicesDeleteComplete.type,
     onError: invoicesRequestFailed.type    
 });
+
+// Helper method
+const convertStringToDate = dateString => {
+    if (dateString !== '') return new Date(dateString).toISOString();
+    return null;
+}

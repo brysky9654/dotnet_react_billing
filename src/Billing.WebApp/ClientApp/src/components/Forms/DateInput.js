@@ -2,7 +2,7 @@ import React from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const DateInput = ({ name, value, label, defaultValue, onChange }) => {
+const DateInput = ({ name, value, label, error, defaultValue, onChange }) => {
 
     const parseDate = () => {
         if (!value) return null;
@@ -21,6 +21,7 @@ const DateInput = ({ name, value, label, defaultValue, onChange }) => {
                 value={dateValue ? dateValue : defaultValue} 
                 onChange={value => onChange({target: {name: name, value: value}})}
             />
+            {error && <div className="alert alert-danger">{error}</div>}
         </div>
     );
 }

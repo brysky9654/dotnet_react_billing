@@ -4,10 +4,8 @@ import Joi from 'joi-browser';
 const Form = ({ data, schema, children, onError, onSubmission }) => {
 
     const validate = () => {
-        const options = { abortEarly: false };
+        const options = { abortEarly: false, allowUnknown: true };
         const { error } = Joi.validate(data, schema, options);
-
-        console.log(error);
         
         if (!error) return null;
         
@@ -28,7 +26,7 @@ const Form = ({ data, schema, children, onError, onSubmission }) => {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={e => handleSubmit(e)}>
            {children}
         </form>
     );

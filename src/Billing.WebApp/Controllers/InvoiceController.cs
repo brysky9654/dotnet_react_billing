@@ -33,7 +33,7 @@ namespace Billing.WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Invoice>> CreateInvoiceAsync(InvoiceDto invoiceDto)
+        public async Task<ActionResult<InvoiceDto>> CreateInvoiceAsync(InvoiceDto invoiceDto)
         {
             if (_status.Contains(invoiceDto.Status) == false) return Unauthorized("Incorrect invoice type");
 
@@ -46,12 +46,15 @@ namespace Billing.WebApp.Controllers
                 Contact = contact,
                 Status = invoiceDto.Status,
                 Notes = invoiceDto.Notes,
-                Reference = invoiceDto.Reference
+                Reference = invoiceDto.Reference,
+                Created = invoiceDto.Created,
+                Due = invoiceDto.Due,
+                Paid = invoiceDto.Paid
             };
 
             _unitOfWork.InvoiceRepository.CreateInvoiceAsync(invoice);
 
-            _unitOfWork.InvoiceItemRepository.CreateInvoiceItemsAsync(invoice, invoiceDto.InvoiceItems);
+            await _unitOfWork.InvoiceItemRepository.CreateInvoiceItemsAsync(invoice, invoiceDto.InvoiceItems);
 
             if (await _unitOfWork.Complete())
             {
@@ -65,6 +68,7 @@ namespace Billing.WebApp.Controllers
                     Created = invoice.Created,
                     Due = invoice.Due,
                     Paid = invoice.Paid,
+                    TaxInclusive = invoice.TaxInclusive,
                     InvoiceItems = invoice.InvoiceItems.Select(x => new InvoiceItem
                     {
                         Id = x.Id,
@@ -74,7 +78,8 @@ namespace Billing.WebApp.Controllers
                         Description = x.Description,
                         TaxAmount = x.TaxAmount,
                         TaxPercentage = x.TaxPercentage,
-                        TaxInclusive = x.TaxInclusive
+                        InvoiceTaxId = x.InvoiceTaxId
+
                     }).ToList()
                 };
 
@@ -101,7 +106,7 @@ namespace Billing.WebApp.Controllers
 
             var invoiceItems = await _unitOfWork.InvoiceItemRepository.GetInvoiceItemsByInvoiceAsync(invoice);
             _unitOfWork.InvoiceItemRepository.DeleteInvoiceItemsAsync(invoiceItems);
-            _unitOfWork.InvoiceItemRepository.CreateInvoiceItemsAsync(invoice, invoiceDto.InvoiceItems);
+            await _unitOfWork.InvoiceItemRepository.CreateInvoiceItemsAsync(invoice, invoiceDto.InvoiceItems);
 
             if (await _unitOfWork.Complete())
             {

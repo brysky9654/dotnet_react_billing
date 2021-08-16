@@ -106,3 +106,15 @@ code {
 .date-input label {
   display: block;
 }
+
+.repeatable-field .form-group label {
+  display: none;
+}
+
+.repeatable-field .form-group {
+  margin-bottom: 0px;
+}
+
+.invoice-form-footer .alert {
+  background-color: #f2f2f2;
+}

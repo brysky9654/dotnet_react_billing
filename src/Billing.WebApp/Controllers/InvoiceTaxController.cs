@@ -49,7 +49,7 @@ namespace Billing.WebApp.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateInvoiceTaxAsync(int id, InvoiceTaxDto invoiceTaxDto)
+        public async Task<ActionResult<InvoiceTax>> UpdateInvoiceTaxAsync(int id, InvoiceTaxDto invoiceTaxDto)
         {
             var invoiceTax = await _unitOfWork.InvoiceTaxRepository.GetInvoiceTaxAsync(id);
 
@@ -61,14 +61,14 @@ namespace Billing.WebApp.Controllers
 
             if (await _unitOfWork.Complete())
             {
-                return NoContent();
+                return Ok(invoiceTax);
             }
 
             return BadRequest("Unable to update tax");
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteInvoiceTaxAsync(int id)
+        public async Task<ActionResult<InvoiceTax>> DeleteInvoiceTaxAsync(int id)
         {
             var invoiceTax = await _unitOfWork.InvoiceTaxRepository.GetInvoiceTaxAsync(id);
 
@@ -76,7 +76,7 @@ namespace Billing.WebApp.Controllers
 
             if (await _unitOfWork.Complete())
             {
-                return Ok();
+                return Ok(invoiceTax);
             }
 
             return BadRequest("Unable to delete tax");

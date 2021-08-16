@@ -1,11 +1,33 @@
 import React from 'react';
+import Input from './Input';
+import SelectInputBasic from './SelectInputBasic';
 import PlusIcon from '../../assets/icons/plus.svg';
 
-const RepeatableField = ({ data, columns, keyProp, onAddRepeatable }) => {
+const RepeatableField = ({ data, columns, keyProp, editable, onChange, onAddRepeatable }) => {
 
     const renderCell = (item, column) => {
         if (column.content) return column.content(item);
-        return item[column.path];
+
+        const content = editable 
+                ? column.inputType === 'select'
+                    ? <SelectInputBasic
+                            name={column.path}
+                            items={column.options}
+                            value={item[column.path]}
+                            path={column.path}
+                            label=""
+                            onChange={e => onChange(e, item)}
+                        />
+                    : <Input
+                        name={column.path}
+                        value={item[column.path]}
+                        inputType={column.inputType}
+                        label=""
+                        onChange={e => onChange(e, item)}
+                    />
+                : item[column.path];
+
+        return content;
     }
 
     return (
@@ -34,9 +56,9 @@ const RepeatableField = ({ data, columns, keyProp, onAddRepeatable }) => {
     );
 }
 
-
 RepeatableField.defaultProps = {
-    keyProp: 'id'
+    keyProp: 'id',
+    editable: false
 }
 
 export default RepeatableField;
