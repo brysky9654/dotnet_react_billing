@@ -3,6 +3,7 @@ import { Redirect } from "react-router-dom";
 import Joi from 'joi-browser';
 import { useDispatch, useSelector } from "react-redux";
 import { loadInvoices, createInvoice, updateInvoice } from "../../store/invoices";
+import { loadInvoiceTaxes } from "../../store/invoiceTaxes";
 import Spinner from '../Spinner/Spinner';
 import Form from '../Forms/Form';
 import InvoiceFormHeader from './InvoiceFormHeader';
@@ -13,6 +14,7 @@ import InvoiceTotal from './InvoiceTotal';
 const InvoicesForm = ({ history, match }) => {
     const dispatch = useDispatch();
     const allInvoices = useSelector(state => state.entities.invoices.data);
+    const invoiceTaxes = useSelector(state => state.entities.invoiceTaxes.data);
     const [invoiceId] = useState(match.params.id);
     const [data, setdata] = useState({
         id: "",
@@ -28,7 +30,7 @@ const InvoicesForm = ({ history, match }) => {
                 order: 1,
                 price: 0,
                 quantity: 1,
-                taxAmount: 0
+                taxAmount: 0,
             }
         ],
         contactId: "",
@@ -48,7 +50,7 @@ const InvoicesForm = ({ history, match }) => {
                 order: null,
                 price: null,
                 quantity: null,
-                taxAmount: null
+                taxAmount: null,
             }
         ],
         contact: {
@@ -67,15 +69,24 @@ const InvoicesForm = ({ history, match }) => {
 
     useEffect(() => {
         dispatch(loadInvoices());
-        if (invoiceId === newUrl) return;
+        dispatch(loadInvoiceTaxes());
 
+        if (invoiceTaxes.length > 0) {
+            let initialData = JSON.parse(JSON.stringify(data));
+            initialData.invoiceItems[0].invoiceTaxId = invoiceTaxes[0].id;
+            setdata({
+                ...initialData,
+            });
+        } else if (invoiceId === newUrl) {
+            return;
+        }
         const invoice = allInvoices.find(c => c.id === parseInt(invoiceId));
         if (!invoice) return;
         setdata({
             ...invoice,
             contactId: invoice.contact.id       
         });
-      }, [allInvoices, invoiceId, dispatch]);
+      }, [allInvoices, invoiceTaxes, invoiceId, dispatch]);
 
     const schema = {
         reference: Joi.string().allow(null, '').label('Reference'),
@@ -90,7 +101,11 @@ const InvoicesForm = ({ history, match }) => {
             taxAmount: Joi.number(),
             invoiceTaxId: Joi.number()
         }),
-        contactId: Joi.number(),
+        contactId: Joi.number().required().error(() => {
+            return {
+              message: 'Contact is required.',
+            }
+          }),
         created: Joi.string().label('Date'),
         due: Joi.string().label('Due'),
         paid: Joi.string().allow(null, '').label('Paid'),
@@ -102,13 +117,18 @@ const InvoicesForm = ({ history, match }) => {
         const formInput = JSON.parse(JSON.stringify(data));
         formInput[e.target.name] = e.target.value;
         setdata(formInput);
-        console.log(formInput);
     }
 
-    const handleSubmission = () => {
+    const handleSubmission = e => {
+        const submitType = e.nativeEvent.submitter.name;
+        const formInput = JSON.parse(JSON.stringify(data));
+        formInput.data = submitType.toUpperCase();
+        setdata(formInput);
+
+        //if (invoiceId === newUrl) dispatch(createInvoice(data));
+        //else dispatch(updateInvoice(data));
+
         console.log(data);
-        if (invoiceId === newUrl) dispatch(createInvoice(data));
-        // else dispatch(updateInvoice(data));
 
         // history.push("/invoices");
     }
@@ -151,6 +171,7 @@ const InvoicesForm = ({ history, match }) => {
                 />
                 <InvoiceFormBody
                     data={data.invoiceItems}
+                    invoiceTaxes={invoiceTaxes}
                     errors={errors}
                     path="invoiceItems"
                     onChange={handleChange}
@@ -167,8 +188,8 @@ const InvoicesForm = ({ history, match }) => {
                 />
                 <div className="row">
                     <div className="col">
-                        <button className="btn btn-primary mt-2 mb-5 mr-2">Publish</button>
-                        <button className="btn btn-secondary mt-2 mb-5">Save Draft</button>
+                        <button name="publish" className="btn btn-primary mt-2 mb-5 mr-2">Publish</button>
+                        <button name="draft" className="btn btn-secondary mt-2 mb-5">Save Draft</button>
                     </div>
                 </div>
             </Form>

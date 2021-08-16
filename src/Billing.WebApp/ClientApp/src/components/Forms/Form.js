@@ -22,7 +22,7 @@ const Form = ({ data, schema, children, onError, onSubmission }) => {
         onError(formErrors || {});
         if (formErrors) return;
 
-        onSubmission();
+        onSubmission(e);
     }
 
     return (

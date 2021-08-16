@@ -1,13 +1,9 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from "react-redux";
-import { loadInvoiceTaxes } from "../../store/invoiceTaxes";
+import React from 'react';
 import TableHeader from '../Tables/TableHeader';
 import RepeatableField from '../Forms/RepeatableField';
 import SelectInputBasic from '../Forms/SelectInputBasic';
 
-const InvoiceItemsForm = ({ data, path, errors, onChange, onAddRepeatable }) => {
-    const dispatch = useDispatch();
-    const invoiceTaxes = useSelector(state => state.entities.invoiceTaxes.data);
+const InvoiceItemsForm = ({ data, invoiceTaxes, path, errors, onChange, onAddRepeatable }) => {
     const columns = [
         { path: 'description', name: 'Description', inputType: 'text', options: [] },
         { path: 'quantity', name: 'Quantity', inputType: 'number', options: [] },
@@ -15,10 +11,6 @@ const InvoiceItemsForm = ({ data, path, errors, onChange, onAddRepeatable }) => 
         { key: 'invoiceTax', name: 'Tax Type', content: item => renderInvoiceTaxes(item) },
         { key: 'delete', content: item => <button onClick={() => handleDelete(item)} className="btn btn-danger btn-sm float-right">X</button> }
     ];
-
-    useEffect(() => {
-        dispatch(loadInvoiceTaxes());
-    }, [invoiceTaxes, dispatch]);
 
     const handleChange = (e, item) => {
         let formInput = JSON.parse(JSON.stringify(data));
@@ -37,13 +29,13 @@ const InvoiceItemsForm = ({ data, path, errors, onChange, onAddRepeatable }) => 
     }
 
     const renderInvoiceTaxes = item => {
+        const taxValue = item.invoiceTaxId ? item.invoiceTaxId : invoiceTaxes.length > 0 ? invoiceTaxes[0].id : null;
         return <SelectInputBasic
                     name="invoiceTaxId"
                     items={[...invoiceTaxes]}
                     error={errors.invoiceTaxes}
-                    value={item.invoiceTaxId}
+                    value={taxValue}
                     onChange={e => handleChange(e, item)}
-
                 />
     }
 
@@ -52,7 +44,7 @@ const InvoiceItemsForm = ({ data, path, errors, onChange, onAddRepeatable }) => 
             let formInput = JSON.parse(JSON.stringify(data));
             onChange({target: {name: path, value: formInput.filter(i => i.id !== item.id)}});
         }
-    };
+    }
 
     return (
         <div className="row invoice-form-body">
