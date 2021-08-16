@@ -93,7 +93,6 @@ const InvoicesForm = ({ history, match }) => {
         status: Joi.string().label('Status'),
         invoiceItems: Joi.array()
         .items({
-            id: Joi.number(),
             description: Joi.string().allow(null, ''),
             order: Joi.number(),
             price: Joi.number(),
@@ -121,14 +120,13 @@ const InvoicesForm = ({ history, match }) => {
 
     const handleSubmission = e => {
         const submitType = e.nativeEvent.submitter.name;
+        console.log(submitType);
         const formInput = JSON.parse(JSON.stringify(data));
-        formInput.data = submitType.toUpperCase();
+        formInput.status = submitType.toUpperCase();
         setdata(formInput);
 
-        //if (invoiceId === newUrl) dispatch(createInvoice(data));
-        //else dispatch(updateInvoice(data));
-
-        console.log(data);
+        if (invoiceId === newUrl) dispatch(createInvoice(formInput));
+        else dispatch(updateInvoice(formInput));
 
         // history.push("/invoices");
     }
@@ -147,7 +145,8 @@ const InvoicesForm = ({ history, match }) => {
             price: 0,
             description: '',
             taxAmount: 0,
-            taxPercentage: true
+            taxPercentage: true,
+            invoiceTaxId: invoiceTaxes.length > 0 ? invoiceTaxes[0].id : null
         });
         setdata(formInput);
     }
