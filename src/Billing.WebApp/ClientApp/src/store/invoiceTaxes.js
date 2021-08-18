@@ -23,7 +23,6 @@ const slice = createSlice({
             state.loading = false;
         },
         invoiceTaxesUpdateStarted: (state, action) => {
-            console.log(action);
             state.loading = true;
         },
         invoiceTaxesUpdateComplete: (state, action) => {

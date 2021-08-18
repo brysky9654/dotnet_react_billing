@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -47,6 +48,7 @@ namespace Billing.WebApp.Controllers
                 Status = invoiceDto.Status,
                 Notes = invoiceDto.Notes,
                 Reference = invoiceDto.Reference,
+                TaxInclusive = Convert.ToBoolean(invoiceDto.TaxInclusive),
                 Created = invoiceDto.Created,
                 Due = invoiceDto.Due,
                 Paid = invoiceDto.Paid
@@ -101,6 +103,9 @@ namespace Billing.WebApp.Controllers
             invoice.Status = invoiceDto.Status;
             invoice.Notes = invoiceDto.Notes;
             invoice.Reference = invoiceDto.Reference;
+            invoice.Created = invoiceDto.Created;
+            invoice.Due = invoiceDto.Due;
+            invoice.Paid = invoiceDto.Paid;
 
             _unitOfWork.InvoiceRepository.UpdateInvoiceAsync(invoice);
 

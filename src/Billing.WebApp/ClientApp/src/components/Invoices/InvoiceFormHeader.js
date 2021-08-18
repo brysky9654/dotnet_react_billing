@@ -10,7 +10,7 @@ import DateInput from '../Forms/DateInput';
 const InvoicesFormHeader = ({ data, errors, onChange }) => {
     const dispatch = useDispatch();
     const allContacts = useSelector(state => state.entities.contacts.data);
-    const [taxInclusive] = useState([{ name: 'Yes', value: true }, { name: 'No', value: false }]);
+    const [taxInclusive] = useState([{ name: 'Yes', value: 1 }, { name: 'No', value: 0 }]);
 
     useEffect(() => {
         dispatch(loadContacts());

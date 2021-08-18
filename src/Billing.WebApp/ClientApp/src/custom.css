@@ -15,7 +15,8 @@ code {
 
 .table thead th,
 .pagination .page-link,
-.list-group {
+.list-group,
+.clear-btn {
   cursor: pointer;
 }
 

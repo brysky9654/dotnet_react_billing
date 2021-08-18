@@ -20,6 +20,7 @@ const Form = ({ data, schema, children, onError, onSubmission }) => {
 
         const formErrors = validate();
         onError(formErrors || {});
+        console.log(formErrors);
         if (formErrors) return;
 
         onSubmission(e);

@@ -24,7 +24,6 @@ const slice = createSlice({
             state.loading = false;
         },
         contactsUpdateStarted: (state, action) => {
-            console.log(action);
             state.loading = true;
         },
         contactsUpdateComplete: (state, action) => {

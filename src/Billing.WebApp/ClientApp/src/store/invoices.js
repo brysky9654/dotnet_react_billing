@@ -7,11 +7,16 @@ const slice = createSlice({
         data: [],
         loading: false,
         error: null,
-        lastFetch: null
+        lastFetch: null,
+        saved: false,
+        savedId: null
     },
     reducers: {
         invoicesRequestStarted: (state, action) => {
             state.loading = true;
+            state.error = false;
+            state.saved = false;
+            state.savedId = null;
             state.lastFetch = Date.now();
         },
         invoicesReceived: (state, action) => {
@@ -21,19 +26,26 @@ const slice = createSlice({
         invoicesRequestFailed: (state, action) => {
             state.error = action.payload;
             state.loading = false;
+            state.saved = false;
+            state.savedId = null;
         },
         invoicesUpdateStarted: (state, action) => {
-            console.log(action);
+            state.error = false;
+            state.saved = false;
+            state.savedId = false;
             state.loading = true;
         },
         invoicesUpdateComplete: (state, action) => {
             const index = state.data.findIndex(d => d.id === action.payload.id);
             state.data[index] = action.payload;
             state.loading = false;
+            state.saved = true;
         },
         invoicesCreateComplete: (state, action) => {
             state.data.push(action.payload);
             state.loading = false;
+            state.saved = true;
+            state.savedId = action.payload.id;
         },
         invoicesDeleteComplete: (state, action) => {
             state.data = state.data.filter(d => d.id !== action.payload.id);
@@ -97,15 +109,15 @@ export const updateInvoice = (data) => requestStarted({
     url: url + '/' + data.id,
     method: 'put',
     data: {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        businessName: data.businessName,
-        email: data.email,
-        address: data.address,
-        city: data.city,
-        state: data.state,
-        country: data.country,
-        favourited: data.favourited
+        contactId: data.contactId,
+        status: data.status,
+        notes: data.notes,
+        reference: data.reference,
+        taxInclusive: data.taxInclusive,
+        invoiceItems: data.invoiceItems,
+        created: convertStringToDate(data.created),
+        due: convertStringToDate(data.due),
+        paid: convertStringToDate(data.paid)
     },
     onStart: invoicesUpdateStarted.type,
     onSuccess: invoicesUpdateComplete.type,
@@ -122,6 +134,12 @@ export const deleteInvoice = (id) => requestStarted({
 
 // Helper method
 const convertStringToDate = dateString => {
-    if (dateString !== '') return new Date(dateString).toISOString();
+    if (dateString !== null && dateString !== '') {
+        const currentDate = new Date(dateString);
+        const offset = (new Date()).getTimezoneOffset() * 60000;
+        return (new Date(currentDate - offset)).toISOString();  
+    } 
     return null;
 }
+
+  

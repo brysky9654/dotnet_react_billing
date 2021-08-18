@@ -61,6 +61,15 @@ const InvoiceItemsForm = ({ data, invoiceTaxes, path, errors, onChange, onAddRep
                             onChange={handleChange}
                             onAddRepeatable={onAddRepeatable}
                         />
+                        { typeof errors.invoiceItems === 'string' && errors.invoiceItems.length
+                            ? (<tfoot>
+                                    <tr>
+                                        <td>
+                                            <div className="alert alert-danger">{errors.invoiceItems}</div>
+                                        </td>
+                                    </tr>
+                                </tfoot>)
+                            : null }
                     </table>
                 </div>
             </div>

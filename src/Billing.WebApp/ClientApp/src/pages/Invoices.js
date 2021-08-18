@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
-import { loadInvoices, deleteInvoice, updateInvoice } from "../store/invoices";
+import { loadInvoices, deleteInvoice } from "../store/invoices";
 import InvoicesTable from '../components/Invoices/InvoicesTable';
 import Pagination from '../components/Tables/Pagination';
 import ListGroup from '../components/Tables/ListGroup';

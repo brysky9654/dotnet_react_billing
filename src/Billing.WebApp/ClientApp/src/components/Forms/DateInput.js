@@ -2,7 +2,7 @@ import React from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const DateInput = ({ name, value, label, error, defaultValue, onChange }) => {
+const DateInput = ({ name, value, label, error, defaultValue, onChange, styles }) => {
 
     const parseDate = () => {
         if (!value) return null;
@@ -12,7 +12,7 @@ const DateInput = ({ name, value, label, error, defaultValue, onChange }) => {
     const dateValue = parseDate(value);
 
     return (
-        <div className="form-group date-input">
+        <div className={styles}>
             {label ? <label htmlFor={name}>{label}</label> : null}
             <DatePicker
                 className="form-control"
@@ -27,7 +27,8 @@ const DateInput = ({ name, value, label, error, defaultValue, onChange }) => {
 }
 
 DateInput.defaultProps = {
-    defaultDate: ''
+    defaultDate: '',
+    styles: 'form-group date-input'
 }
 
 export default DateInput;

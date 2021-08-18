@@ -21,8 +21,9 @@ const InvoiceFormFooter = ({ data, errors, onChange }) => {
                         label="Paid On (Optional)"
                         onChange={onChange}
                         error={errors.paid}
-
+                        styles="d-inline-block form-group date-input"
                     />
+                    <div className="clear-btn d-inline-block text-secondary ml-2" onClick={value => onChange({target: {name: 'paid', value: ''}})}>Clear</div>
                 </div>
             </div>
         </div>
