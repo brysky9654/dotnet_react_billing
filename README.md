@@ -6,10 +6,10 @@ The project is a work in progress, new functionality such as profile management 
 
 ## Screenshots of the application
 
-![Create invoice screen](https://github.com/joshanthony/dotnet-react-billing/blob/main/docs/images/dotnet-react-billing-01.png?raw=true)
+![Create invoice screen](https://github.com/joshanthony/dotnet-react-billing/blob/main/docs/images/dotnet-react-billing1.png?raw=true)
 
-![View invoices screen](https://github.com/joshanthony/dotnet-react-billing/blob/main/docs/images/dotnet-react-billing-02.png?raw=true)
+![View invoices screen](https://github.com/joshanthony/dotnet-react-billing/blob/main/docs/images/dotnet-react-billing2.png?raw=true)
 
-![View contacts screen](https://github.com/joshanthony/dotnet-react-billing/blob/main/docs/images/dotnet-react-billing-03.png?raw=true)
+![View contacts screen](https://github.com/joshanthony/dotnet-react-billing/blob/main/docs/images/dotnet-react-billing3.png?raw=true)
 
 
