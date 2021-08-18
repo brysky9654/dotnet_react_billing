@@ -252,3 +252,6 @@ mailsettings.production.json
 
 # VS Code
 .vscode/
+
+# Mac OSX
+.DS_Store
