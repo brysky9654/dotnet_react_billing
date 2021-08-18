@@ -29,7 +29,7 @@ const InvoiceItemsForm = ({ data, invoiceTaxes, path, errors, onChange, onAddRep
     }
 
     const renderInvoiceTaxes = item => {
-        const taxValue = item.invoiceTaxId ? item.invoiceTaxId : invoiceTaxes.length > 0 ? invoiceTaxes[0].id : null;
+        const taxValue = item.invoiceTaxId ? item.invoiceTaxId : invoiceTaxes.length > 0 ? invoiceTaxes[0].id : "";
         return <SelectInputBasic
                     name="invoiceTaxId"
                     items={[...invoiceTaxes]}

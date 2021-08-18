@@ -9,7 +9,6 @@ const SelectInputBasic = ({ items, name, path, value, label, error, onChange }) 
                 name={name}
                 id={name}
                 value={value}
-                defaultValue={value}
                 onChange={e => onChange(e)}
             >
                 {items.map(item => (

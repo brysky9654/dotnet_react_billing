@@ -11,6 +11,7 @@ const InvoicesTable = ({ invoices, sortColumn, onDelete, onSort }) => {
         { key: 'due', name: 'Due', content: invoice => new Date(invoice.due).toLocaleDateString() },
         { key: 'paid', name: 'Paid', content: invoice => invoice.paid ? "Yes" : "No" },
         { path: 'status', name: 'Status' },
+        { key: 'view', content: invoice => <Link to={"/invoices/view/" + invoice.id} className="btn btn-secondary btn-sm">View</Link> },
         { key: 'edit', content: invoice => <Link to={"/invoices/" + invoice.id} className="btn btn-warning btn-sm">Edit</Link> },
         { key: 'delete', content: invoice => <button onClick={() => onDelete(invoice)} className="btn btn-danger btn-sm">Delete</button> }
     ];

@@ -18,7 +18,6 @@ const TableHeader = ({ columns, sortColumn, onSort }) => {
         if (column.path !== sortColumn.path) return null;
         if (sortColumn.order === 'asc') return <SortIcon ascending={true} />
         return <SortIcon ascending={false} />
-
     }
 
     return (
@@ -27,8 +26,9 @@ const TableHeader = ({ columns, sortColumn, onSort }) => {
                 {columns.map(column => (
                     <th 
                         key={column.path || column.key}
-                        onClick={() => sortColumn.path ? raiseSort(column.path) : null}
+                        onClick={() => sortColumn.path && column.path ? raiseSort(column.path) : null}
                         scope="col"
+                        className={column.path ? "sortable-column" : "unsortable-column"}
                     >
                         {column.name}
                         {renderSortIcon(column)}

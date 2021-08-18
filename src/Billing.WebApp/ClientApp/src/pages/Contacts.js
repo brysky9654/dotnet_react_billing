@@ -14,7 +14,7 @@ const Contacts = () => {
     const dispatch = useDispatch();
     const allContacts = useSelector(state => state.entities.contacts.data);
 
-    const [pageSize] = useState(2);
+    const [pageSize] = useState(5);
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedTag, setSelectedTag] = useState(null);
     const [sortColumn, setSortColumn] = useState({ path: 'firstName', order: 'asc'});

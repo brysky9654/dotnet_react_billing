@@ -6,7 +6,6 @@ import SelectInput from '../Forms/SelectInput';
 import SelectInputBasic from '../Forms/SelectInputBasic';
 import DateInput from '../Forms/DateInput';
 
-
 const InvoicesFormHeader = ({ data, errors, onChange }) => {
     const dispatch = useDispatch();
     const allContacts = useSelector(state => state.entities.contacts.data);

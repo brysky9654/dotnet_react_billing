@@ -7,6 +7,7 @@ import { Home } from './components/Home';
 import Login from './pages/Login';
 import ContactsForm from './components/Contacts/ContactsForm';
 import Contacts from './pages/Contacts';
+import InvoicesView from './components/Invoices/InvoicesView';
 import InvoicesForm from './components/Invoices/InvoicesForm';
 import Invoices from './pages/Invoices';
 import './custom.css';
@@ -24,6 +25,7 @@ const App = () => {
         <Route path='/login' component={Login} exact />
         <Route path='/contacts/:id' component={ContactsForm} exact />
         <Route path='/contacts' component={Contacts} exact />
+        <Route path='/invoices/view/:id' component={InvoicesView} exact />
         <Route path='/invoices/:id' component={InvoicesForm} exact />
         <Route path='/invoices' component={Invoices} exact />
     </Layout>

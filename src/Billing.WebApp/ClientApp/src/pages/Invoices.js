@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { loadInvoices, deleteInvoice } from "../store/invoices";
 import InvoicesTable from '../components/Invoices/InvoicesTable';
 import Pagination from '../components/Tables/Pagination';
-import ListGroup from '../components/Tables/ListGroup';
 import SearchBox from '../components/Tables/SearchBox';
 import Spinner from '../components/Spinner/Spinner';
 import { paginate } from '../utils/paginate';
@@ -14,22 +13,10 @@ const Invoices = () => {
     const dispatch = useDispatch();
     const allInvoices = useSelector(state => state.entities.invoices.data);
 
-    const [pageSize] = useState(2);
+    const [pageSize] = useState(6);
     const [currentPage, setCurrentPage] = useState(1);
-    const [selectedTag, setSelectedTag] = useState(null);
     const [sortColumn, setSortColumn] = useState({ path: 'id', order: 'asc'});
     const [searchQuery, setSearchQuery] = useState("");
-
-    const [tags] = useState([
-        { id: '', name: "All Invoices", value: null },
-        { id: 1, name: "Draft", value: "DRAFT" },
-        { id: 2, name: "Published", value: "PUBLISHED" },
-        { id: 3, name: "Unpaid", value: "PUBLISHED" },
-        { id: 4, name: "Paid", value: "PUBLISHED" },
-        { id: 5, name: "Reversed", value: "REVERSED" }
-
-    ]);
-
     const [invoices, setInvoices] = useState(allInvoices);
 
     useEffect(() => {
@@ -48,12 +35,6 @@ const Invoices = () => {
         setCurrentPage(page);
     }
 
-    const handleTagSelect = tag => {
-        setCurrentPage(1);
-        setSearchQuery("");
-        setSelectedTag(tag);
-    }
-
     const handleSort = sortData => {
         setSortColumn(sortData);
     }
@@ -61,7 +42,6 @@ const Invoices = () => {
     const handleSearch = query => {
         setSearchQuery(query);
         setCurrentPage(1);
-        setSelectedTag(null);
     }
 
     const getPagedData = () => {
@@ -75,8 +55,6 @@ const Invoices = () => {
                   item.reference.toLowerCase().indexOf(query) >= 0
                 )
               });
-        } else if (selectedTag && selectedTag.id) {
-            filtered = invoices.filter(t => t.status === selectedTag.value);
         }
         
         const sorted = filtered.sort((a, b) => (sortColumn.order === 'asc' ? a[sortColumn.path] > b[sortColumn.path] : b[sortColumn.path] > a[sortColumn.path]) ? 1 : -1)
@@ -98,13 +76,7 @@ const Invoices = () => {
         <>
             <h1 className="pb-3 pt-1">Invoices</h1>
             <div className="row">
-                <div className="col-3">
-                    <ListGroup 
-                        items={tags}
-                        selectedItem={selectedTag}
-                        onItemSelect={handleTagSelect}
-                    />
-                </div>
+                
                 <div className="col">
                     <div className="clearfix">
                         <Link to="/invoices/new" className="btn btn-primary mb-2 float-right">

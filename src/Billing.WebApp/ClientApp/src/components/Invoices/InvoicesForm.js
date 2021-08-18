@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import Joi from 'joi-browser';
 import { useDispatch, useSelector } from "react-redux";
 import { loadInvoices, createInvoice, updateInvoice } from "../../store/invoices";
@@ -35,7 +35,9 @@ const InvoicesForm = ({ match }) => {
                 order: 1,
                 price: 0,
                 quantity: 1,
-                taxAmount: 0,
+                taxAmount: invoiceTaxes.length > 0 ? invoiceTaxes[0].amount : 0,
+                taxPercentage: true,
+                invoiceTaxId: invoiceTaxes.length > 0 ? invoiceTaxes[0].id : null
             }
         ],
         contactId: "",
@@ -55,9 +57,9 @@ const InvoicesForm = ({ match }) => {
                 order: null,
                 price: null,
                 quantity: null,
-                taxAmount: invoiceTaxes.length > 0 ? invoiceTaxes[0].amount : 0,
-                taxPercentage: true,
-                invoiceTaxId: invoiceTaxes.length > 0 ? invoiceTaxes[0].id : null
+                taxAmount: null,
+                taxPercentage: null,
+                invoiceTaxId: null
             }
         ],
         contact: {
@@ -74,21 +76,10 @@ const InvoicesForm = ({ match }) => {
     const newUrl = 'new';
     const count = allInvoices.length;
 
-
-
     useEffect(() => {
         dispatch(loadInvoices());
         dispatch(loadInvoiceTaxes());
 
-        // if (invoiceTaxes.length > 0) {
-        //     let initialData = JSON.parse(JSON.stringify(data));
-        //     if (initialData !== data) {
-        //         initialData.invoiceItems[0].invoiceTaxId = invoiceTaxes[0].id;
-        //         initialData.invoiceItems[0].taxAmount = invoiceTaxes[0].amount;
-        //         setdata({
-        //             ...initialData,
-        //         });
-        //     }
         if (invoiceId === newUrl) {
             return;
         }
@@ -109,8 +100,7 @@ const InvoicesForm = ({ match }) => {
             order: Joi.number().label('Order'),
             price: Joi.number().label('Price'),
             quantity: Joi.number().positive().label('Quantity'),
-            taxAmount: Joi.number(),
-            invoiceTaxId: Joi.number()
+            taxAmount: Joi.number()
         }),
         contactId: Joi.number().required().error(() => {
             return {
@@ -138,6 +128,10 @@ const InvoicesForm = ({ match }) => {
         if (confirmed) {
             const formInput = JSON.parse(JSON.stringify(data));
             formInput.status = submitType.toUpperCase();
+            if(!formInput.invoiceItems[0].invoiceTaxId && invoiceTaxes.length > 0) {
+                formInput.invoiceItems[0].taxAmount = invoiceTaxes[0].amount;
+                formInput.invoiceItems[0].invoiceTaxId = invoiceTaxes[0].id;
+            }
             setdata(formInput);
             if (invoiceId === newUrl) dispatch(createInvoice(formInput));
             else dispatch(updateInvoice(formInput));
@@ -167,7 +161,6 @@ const InvoicesForm = ({ match }) => {
     if (count <= 0 && invoiceId !== newUrl) return <Spinner showText={false} />;
     if (count >= 1 && invoiceId !== newUrl && !allInvoices.find(c => c.id === parseInt(invoiceId))) return <Redirect to="/not-found" />;
     if (saved && savedId != null && invoiceId === newUrl) setInvoiceId(savedId);
-    //if (saved && savedId != null && invoiceId !== newUrl) return <Redirect to={"/invoices/" + savedId} />
 
     let invoiceType = "Invoice";
     if (invoiceId === newUrl) invoiceType = "Create Invoice";
@@ -230,7 +223,9 @@ const InvoicesForm = ({ match }) => {
                 <div className="row">
                     <div className="col">
                         <Button name="published" loading={loading} text={data.status === "PUBLISHED" && invoiceId !== newUrl ? "Save" : "Publish" } styles="btn btn-primary mt-2 mb-5 mr-2" />
-                        {data.status === "PUBLISHED" && invoiceId !== newUrl ? null : <Button name="draft" loading={null} text="Save Draft" styles="btn btn-secondary mt-2 mb-5" /> }
+                        {data.status === "PUBLISHED" && invoiceId !== newUrl
+                            ? <Link to="/invoices/" className="btn btn-secondary mt-2 mb-5">Return to Invoices</Link>
+                            : <Button name="draft" loading={null} text="Save Draft" styles="btn btn-secondary mt-2 mb-5" /> }
                     </div>
                 </div>
             </Form>
